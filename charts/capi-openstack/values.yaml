@@ -1,6 +1,11 @@
 clusterapiVersion: v1alpha3
 
-name: "demo-cluster"
+crsObjects:
+  - calico-cni
+  - ccm-openstack
+
+crsCloudConfigSecret: null
+
 cloudConfigSecret:
   #If defined, secret will not be created and must exist
   name: null

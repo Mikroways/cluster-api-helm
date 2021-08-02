@@ -1,0 +1,47 @@
+apiVersion: addons.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: ClusterResourceSet
+metadata:
+  name: {{ include "capi-openstack.crsCloudConfigName" . }}
+spec:
+  clusterSelector:
+    matchLabels:
+      {{ include "capi-openstack.crsCloudConfigName" . }}: "true"
+  resources:
+  - kind: Secret
+    name: {{ include "capi-openstack.crsCloudConfigName" . }}
+  strategy: ApplyOnce
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "capi-openstack.crsCloudConfigName" . }}
+data:
+  cloud-config: {{ .Values.crsCloudConfigSecret | b64enc }}
+  cloud.conf: {{ .Values.crsCloudConfigSecret | b64enc }}
+
+{{ range $crs := .Values.crsObjects }}
+{{- $pattern := printf "files/crs/%s/*.yaml" $crs -}}
+{{- $crsName := printf "%s-%s" (include "capi-openstack.name" $) $crs | trunc 63 | trimSuffix "-" -}}
+{{ if ($.Files.Glob $pattern ) }}
+---
+apiVersion: addons.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: ClusterResourceSet
+metadata:
+  name: {{ $crsName }}
+spec:
+  clusterSelector:
+    matchLabels:
+      {{ $crsName }}: "true"
+  resources:
+  - kind: ConfigMap
+    name: {{ $crsName }}
+  strategy: ApplyOnce
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $crsName }}
+data:
+  {{ ($.Files.Glob $pattern).AsConfig | nindent 2 }}
+{{ end }}
+{{ end }}

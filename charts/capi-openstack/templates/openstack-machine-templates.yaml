@@ -11,7 +11,7 @@ spec:
       flavor: {{ required ".Values.controlPlaneTemplate.flavor is required" .Values.controlPlaneTemplate.flavor }}
       image: {{ required ".Values.controlPlaneTemplate.image is required" .Values.controlPlaneTemplate.image }}
       sshKeyName: {{ required ".Values.openstack.sshKeyName is required" $.Values.openstack.sshKeyName }}
-{{- range $index, $template := .Values.machineTemplates }}
+{{ range $index, $template := .Values.machineTemplates }}
 {{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}

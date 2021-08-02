@@ -4,7 +4,8 @@
 Expand the name of the chart.
 */}}
 {{- define "capi-openstack.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- $name:= default .Chart.Name .Values.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -20,7 +21,7 @@ range iteration
 {{- end -}}
 
 {{/*
-Returns a machineDeploymentName from object because its always used inside a
+Returns a machineTemplateName from object because its always used inside a
 range iteration
 */}}
 {{- define "capi-openstack.machineTemplateName" -}}
@@ -31,20 +32,34 @@ range iteration
       trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "capi-openstack.machineTemplateNameFromMDObject" -}}
+{{- $templateName:= required (
+      printf "templateName is required for .Values.machineDeployments.%d" .Index)
+      .MachineDeployment.templateName -}}
+{{- printf "%s-%s" (include "capi-openstack.name" .Context) $templateName |
+      trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{/*
 Cloud config secret
 */}}
 {{- define "capi-openstack.cloudConfigSecret" -}}
-{{- if .Values.cloudConfigSecret.name -}}
-name: {{ .Values.cloudConfigSecret.name }}
-{{- else -}}
-name: {{ printf "%s-cloud-config" .Values.name }}
-{{- end -}}
+name: {{ include "capi-openstack.cloudConfigSecretName" . }}
 {{- if .Values.cloudConfigSecret.namespace -}}
 namespace: {{ .Values.cloudConfigSecret.namespace }}
 {{- end -}}
 {{- end -}}
 
+{{/*
+Cloud config secret Name
+*/}}
+{{- define "capi-openstack.cloudConfigSecretName" -}}
+{{- if .Values.cloudConfigSecret.name -}}
+{{ .Values.cloudConfigSecret.name }}
+{{- else -}}
+{{- printf "cloud-config-%s" (include "capi-openstack.name" .) |
+      trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Array of dnsNameservers to be configured for internal network
@@ -58,5 +73,11 @@ Array of dnsNameservers to be configured for internal network
 {{- end -}}
 
 {{- define "capi-openstack.kubeadmControlPlaneName" -}}
-{{- printf "%s-control-plane" .Values.name -}}
+{{- printf "control-plane-%s" (include "capi-openstack.name" .) |
+      trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-openstack.crsCloudConfigName" -}}
+{{- printf "%s-crs-cloud-config" (include "capi-openstack.name" .) |
+    trunc 63 | trimSuffix "-" -}}
 {{- end -}}

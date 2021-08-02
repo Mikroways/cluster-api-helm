@@ -3,6 +3,12 @@ apiVersion: cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
 kind: Cluster
 metadata:
   name: {{ include "capi-openstack.name" . }}
+  labels:
+    {{ include "capi-openstack.crsCloudConfigName" . }}: "true"
+{{ range $crs := .Values.crsObjects }}
+{{- $crsName := printf "%s-%s" (include "capi-openstack.name" $) $crs | trunc 63 | trimSuffix "-" }}
+    {{ $crsName }}: "true"
+{{ end }}
 spec:
   clusterNetwork: {{ toYaml .Values.clusterNetwork | nindent 4 }}
   controlPlaneRef:

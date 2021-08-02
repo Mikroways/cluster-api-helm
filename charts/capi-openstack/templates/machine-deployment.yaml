@@ -24,7 +24,7 @@ spec:
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
         kind: OpenStackMachineTemplate
-        name: {{ include "capi-openstack.machineDeploymentName" $object }}
+        name: {{ include "capi-openstack.machineTemplateNameFromMDObject" $object }}
       version: {{ $.Values.kubernetes.version }}
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
