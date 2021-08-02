@@ -1,0 +1,15 @@
+---
+apiVersion: cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: Cluster
+metadata:
+  name: {{ include "capi-openstack.name" . }}
+spec:
+  clusterNetwork: {{ toYaml .Values.clusterNetwork | nindent 4 }}
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: KubeadmControlPlane
+    name: {{ include "capi-openstack.kubeadmControlPlaneName" . }}
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: OpenStackCluster
+    name: {{ include "capi-openstack.name" . }}

@@ -1,0 +1,66 @@
+clusterapiVersion: v1alpha3
+
+name: "demo-cluster"
+cloudConfigSecret:
+  #If defined, secret will not be created and must exist
+  name: null
+  namespace: null
+  caCert: null
+  clouds_yaml: null
+
+kubernetes:
+  version: v1.20.9
+  mastersReplicas: 1
+  workersReplicas: 2
+
+clusterNetwork:
+  pods:
+    cidrBlocks:
+    - 192.168.0.0/16
+  serviceDomain: cluster.local
+
+bastion:
+  enabled: false
+  flavor: null
+  image: null
+
+openstack:
+  sshKeyName: null
+  disablePortSecurity: false
+  dnsNameservers: []
+  managedAPIServerLoadBalancer: true
+  managedSecurityGroups: true
+  nodeCidr: 10.6.0.0/24
+  useOctavia: true
+  sshKeyName: null
+  failureDomain: null
+
+controlPlaneTemplate:
+  flavor: null
+  image: null
+
+machineTemplates: []
+machineDeployments: []
+
+kubeadm:
+  preKubeadmCommands: []
+  files: []
+  clusterConfiguration:
+    apiServer:
+      extraArgs:
+        cloud-provider: external
+    controllerManager:
+      extraArgs:
+        cloud-provider: external
+    imageRepository: k8s.gcr.io
+  initConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        cloud-provider: external
+      name: "{{ local_hostname }}"
+  joinConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        cloud-provider: external
+      name: "{{ local_hostname }}"
+

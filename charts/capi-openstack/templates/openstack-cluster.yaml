@@ -1,0 +1,23 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: OpenStackCluster
+metadata:
+  name: {{ include "capi-openstack.name" . }}
+spec:
+  cloudName: openstack
+  cloudsSecret: {{ include "capi-openstack.cloudConfigSecret" . | nindent 4 }}
+  disablePortSecurity: {{ .Values.openstack.disablePortSecurity }}
+  dnsNameservers: {{ include "capi-openstack.openstackDnsNameservers" . |
+nindent 4 }}
+  managedAPIServerLoadBalancer: {{ required
+".Values.openstack.managedAPIServerLoadBalancer is required" .Values.openstack.managedAPIServerLoadBalancer }}
+  managedSecurityGroups: {{ required ".Values.openstack.managedSecurityGroups is required" .Values.openstack.managedSecurityGroups }}
+  nodeCidr: {{ required ".Values.openstack.nodeCidr is required" .Values.openstack.nodeCidr }}
+  useOctavia: {{ required ".Values.openstack.useOctavia is required" .Values.openstack.useOctavia }}
+  {{ if .Values.bastion.enabled }}
+  bastion:
+    enabled: {{ .Values.bastion.enabled }}
+    flavor: {{ .Values.bastion.flavor }}
+    image: {{ .Values.bastion.image }}
+    sshKeyName: {{ .Values.openstack.sshKeyName }}
+  {{ end }}

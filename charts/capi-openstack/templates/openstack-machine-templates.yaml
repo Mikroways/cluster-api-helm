@@ -1,0 +1,31 @@
+{{- $cloudConfigSecret := include "capi-openstack.cloudConfigSecret" .  -}}
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: OpenStackMachineTemplate
+metadata:
+  name: {{ include "capi-openstack.kubeadmControlPlaneName" . }}
+spec:
+  template:
+    spec:
+      cloudName: openstack
+      cloudsSecret: {{ $cloudConfigSecret | nindent 8 }}
+      flavor: {{ required ".Values.controlPlaneTemplate.flavor is required" .Values.controlPlaneTemplate.flavor }}
+      image: {{ required ".Values.controlPlaneTemplate.image is required" .Values.controlPlaneTemplate.image }}
+      sshKeyName: {{ required ".Values.openstack.sshKeyName is required" $.Values.openstack.sshKeyName }}
+{{- range $index, $template := .Values.machineTemplates }}
+{{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: OpenStackMachineTemplate
+metadata:
+  name: {{ include "capi-openstack.machineTemplateName" $object }}
+spec:
+  template:
+    spec:
+      cloudName: openstack
+      cloudsSecret: {{ $cloudConfigSecret | nindent 8 }}
+      flavor: {{ required (printf "flavor is required for .Values.machineTemplates.%d" $index)
+        $template.flavor }}
+      image: {{ required (printf "image is required for .Values.MachineTemplates.%d" $index)
+        $template.image }}
+      sshKeyName: {{ required ".Values.openstack.sshKeyName is required" $.Values.openstack.sshKeyName }}
+{{ end }}

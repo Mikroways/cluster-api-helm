@@ -1,0 +1,16 @@
+apiVersion: v1
+name: cluster-api-openstack
+description: Install Cluster API manifests to generate a fully working Kubernetes cluster 
+keywords:
+- clusterapi 
+- provisioning
+- bootstrapping 
+- kubernetes
+- openstack
+version: 1.0.0
+home: https://cluster-api.sigs.k8s.io/ 
+sources:
+- https://cluster-api.sigs.k8s.io/
+maintainers:
+- name: chrodriguez
+  email: chrodriguez@gmail.com

@@ -1,0 +1,30 @@
+---
+apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: KubeadmControlPlane
+metadata:
+  name: {{ include "capi-openstack.kubeadmControlPlaneName" . }}
+spec:
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: OpenStackMachineTemplate
+    name: {{ include "capi-openstack.kubeadmControlPlaneName" . }}
+  kubeadmConfigSpec:
+    {{ if .Values.kubeadm.preKubeadmCommands }}
+    preKubeadmCommands:
+    {{- toYaml .Values.kubeadm.preKubeadmCommands | nindent 8 }}
+    {{ end -}}
+    {{ if .Values.kubeadm.files }}
+    files:
+    {{- toYaml .Values.kubeadm.files | nindent 8 }}
+    {{ end -}}
+    clusterConfiguration:
+    {{- toYaml ( required ".Values.kubeadm.clusterConfiguration"
+        .Values.kubeadm.clusterConfiguration ) | nindent 6 }}
+    initConfiguration:
+    {{- toYaml (required ".Values.kubeadm.initConfiguration"
+        .Values.kubeadm.initConfiguration ) | nindent 6 }}
+    joinConfiguration:
+    {{- toYaml (required ".Values.kubeadm.joinConfiguration"
+        .Values.kubeadm.joinConfiguration ) | nindent 6 }}
+  replicas: {{ default 1 .Values.kubernetes.mastersReplicas }}
+  version: {{ required ".Values.kubernetes.version" .Values.kubernetes.version }}

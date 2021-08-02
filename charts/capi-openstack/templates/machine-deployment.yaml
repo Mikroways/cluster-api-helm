@@ -1,0 +1,48 @@
+{{- range $index, $md := .Values.machineDeployments }}
+{{- $object := dict "MachineDeployment" $md "Index" $index "Context" $ -}}
+---
+apiVersion: cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: MachineDeployment
+metadata:
+  name: {{ include "capi-openstack.machineDeploymentName" $object }}
+spec:
+  clusterName: {{ include "capi-openstack.name" $ }}
+  replicas: {{ $md.replicas | default 1 }}
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+          kind: KubeadmConfigTemplate
+          name: {{ include "capi-openstack.machineDeploymentName" $object }}
+      clusterName: {{ include "capi-openstack.name" $ }}
+      failureDomain: {{ $md.failureDomain | default (required
+        (printf ".Values.openstack.failureDomain must be defined if .Values.machineDeployments.%d.failureDomain is not defined" $index)
+        $.Values.openstack.failureDomain )}}
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+        kind: OpenStackMachineTemplate
+        name: {{ include "capi-openstack.machineDeploymentName" $object }}
+      version: {{ $.Values.kubernetes.version }}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ include "capi-openstack.machineDeploymentName" $object }}
+spec:
+  template:
+    spec:
+      joinConfiguration:
+      {{- toYaml (required ".Values.kubeadm.joinConfiguration"
+        $.Values.kubeadm.joinConfiguration ) | nindent 8 }}
+      {{ if $.Values.kubeadm.preKubeadmCommands }}
+      preKubeadmCommands:
+      {{- toYaml $.Values.kubeadm.preKubeadmCommands | nindent 8 }}
+      {{ end -}}
+      {{ if $.Values.kubeadm.files }}
+      files:
+      {{- toYaml $.Values.kubeadm.files | nindent 8 }}
+      {{ end -}}
+{{ end }}
