@@ -10,6 +10,15 @@ bastion:
   image: ubuntu-2004-kube-v1.20.9
   flavor: CPU2RAM4096HD20GB
 
+kubeadm:
+  users:
+    - name: mikroways
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      groups: sudo
+      shell: /bin/bash
+      sshAuthorizedKeys: 
+        - ssh-rsa yourpublickey
+        - ssh-rsa otheruserpublickey
 
 crsCloudConfigSecret: |
   [Global]

@@ -34,6 +34,9 @@ metadata:
 spec:
   template:
     spec:
+      {{ if $.Values.kubeadm.users }}
+      users: {{ toYaml $.Values.kubeadm.users | nindent 8 }}
+      {{ end }}
       joinConfiguration:
       {{- toYaml (required ".Values.kubeadm.joinConfiguration"
         $.Values.kubeadm.joinConfiguration ) | nindent 8 }}

@@ -9,6 +9,9 @@ spec:
     kind: OpenStackMachineTemplate
     name: {{ include "capi-openstack.kubeadmControlPlaneName" . }}
   kubeadmConfigSpec:
+    {{ if $.Values.kubeadm.users }}
+    users: {{ toYaml $.Values.kubeadm.users | nindent 8 }}
+    {{ end }}
     {{ if .Values.kubeadm.preKubeadmCommands }}
     preKubeadmCommands:
     {{- toYaml .Values.kubeadm.preKubeadmCommands | nindent 8 }}

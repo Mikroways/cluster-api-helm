@@ -96,6 +96,7 @@ machineDeployments: []
 # Defaults are ok
 kubeadm:
   preKubeadmCommands: []
+  users: []
   files: []
   clusterConfiguration:
     apiServer:
