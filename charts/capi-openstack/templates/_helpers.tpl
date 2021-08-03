@@ -56,7 +56,7 @@ Cloud config secret Name
 {{- if .Values.cloudConfigSecret.name -}}
 {{ .Values.cloudConfigSecret.name }}
 {{- else -}}
-{{- printf "cloud-config-%s" (include "capi-openstack.name" .) |
+{{- printf "%s-cloud-config" (include "capi-openstack.name" .) |
       trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
@@ -73,7 +73,7 @@ Array of dnsNameservers to be configured for internal network
 {{- end -}}
 
 {{- define "capi-openstack.kubeadmControlPlaneName" -}}
-{{- printf "control-plane-%s" (include "capi-openstack.name" .) |
+{{- printf "%s-control-plane" (include "capi-openstack.name" .) |
       trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 

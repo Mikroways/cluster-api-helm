@@ -1,34 +1,51 @@
+---
+# CAPI version for every created manifest
 clusterapiVersion: v1alpha3
 
+# If CRS alpha feature is enabled, the following objects will be created
+# CRS manifests are provided at files/crs/<crs-name>/*yaml
+# There is a script to download provided manifests. But some of them would
+# require some modification because format restrictions
 crsObjects:
   - calico-cni
   - ccm-openstack
 
+# CRS to create a Secret for cloud-config.
 crsCloudConfigSecret: null
 
+# Use an existent cloud config yaml or provide one?
 cloudConfigSecret:
-  #If defined, secret will not be created and must exist
+  # If defined, secret will not be created and must exist in specified namespace
+  # otherwise, caCert and clouds_yaml shall be specified. clouds_yaml is
+  # required
   name: null
   namespace: null
   caCert: null
   clouds_yaml: null
 
+# kubernetes values
 kubernetes:
   version: v1.20.9
+  # Only master replicas can be managed from this option. Workers are managed
+  # from machineDeployments section
   mastersReplicas: 1
-  workersReplicas: 2
 
+# kubernetes cluster network data. You can view valid options using:
+#   kubectl explain cluster.spec.clusterNetwork
 clusterNetwork:
   pods:
     cidrBlocks:
     - 192.168.0.0/16
   serviceDomain: cluster.local
 
+# Enable bastion creation. In case enabled, flavor and image must be set
 bastion:
   enabled: false
   flavor: null
   image: null
 
+# Openstack default values. All can be understood using 
+#   kubectl explain openstackcluster.spec
 openstack:
   sshKeyName: null
   disablePortSecurity: false
@@ -40,13 +57,43 @@ openstack:
   sshKeyName: null
   failureDomain: null
 
+# Template image and flavor to used for master nodes
 controlPlaneTemplate:
   flavor: null
   image: null
 
+# Define machine templates to be used. Is an array of objects, each with:
+#   - name: template name
+#     flavor: openstack  to be used
+#     image: image to be used. Must have kuebernetes preinstalled. See:
+#       https://github.com/kubernetes-sigs/image-builder
+#
+# For example:
+# machineTemplates:
+#   - image: ubuntu-2004-kube-v1.20.9
+#     flavor: CPU2RAM4096HD20GB
+#     name: workerTemplate
+
 machineTemplates: []
+
+# Define machine deployments as a list of objects, each with:
+#   - name:
+#     templateName: name of previously defined template
+#     replicas: number of replicas
+#
+# For example
+#  - name: production
+#    templateName: prodTemplate
+#    replicas: 3
+#  - name: develop
+#    templateName: smallTemplate
+#    replicas: 2
 machineDeployments: []
 
+# Kubeadm options. Each of these can be understood using:
+#   kubectl explain kubeadmcontrolplanes.spec.kubeadmConfigSpec
+#
+# Defaults are ok
 kubeadm:
   preKubeadmCommands: []
   files: []

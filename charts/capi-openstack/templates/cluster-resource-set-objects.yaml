@@ -13,11 +13,20 @@ spec:
 ---
 apiVersion: v1
 kind: Secret
+type: addons.cluster.x-k8s.io/resource-set
 metadata:
   name: {{ include "capi-openstack.crsCloudConfigName" . }}
-data:
-  cloud-config: {{ .Values.crsCloudConfigSecret | b64enc }}
-  cloud.conf: {{ .Values.crsCloudConfigSecret | b64enc }}
+stringData:
+  cloud-config.yaml: |
+    kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+     name: cloud-config
+     namespace: kube-system
+    data:
+      cloud-config: {{ .Values.crsCloudConfigSecret | b64enc }}
+      cloud.conf: {{ .Values.crsCloudConfigSecret | b64enc }}
 
 {{ range $crs := .Values.crsObjects }}
 {{- $pattern := printf "files/crs/%s/*.yaml" $crs -}}

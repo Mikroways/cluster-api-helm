@@ -1,0 +1,54 @@
+---
+openstack:
+  dnsNameservers:
+  - 8.8.8.8
+  sshKeyName: mikroways-bastion
+  failureDomain: nova
+
+bastion:
+  enabled: true
+  image: ubuntu-2004-kube-v1.20.9
+  flavor: CPU2RAM4096HD20GB
+
+
+crsCloudConfigSecret: |
+  [Global]
+  auth-url=http://example.net:5000
+  username="user"
+  password="supersecret"
+  tenant-id="1234567890"
+  tenant-name="dev"
+  domain-name="Default"
+  region="RegionOne"
+
+cloudConfigSecret:
+  clouds_yaml: |
+    clouds:
+      openstack:
+        auth:
+          auth_url: http://example.net:5000
+          username: "user"
+          project_id: 1234567890
+          project_name: "dev"
+          user_domain_name: "Default"
+          password: "supersecret"
+        region_name: "RegionOne"
+        interface: "public"
+        identity_api_version: 3
+
+controlPlaneTemplate:
+  image: ubuntu-2004-kube-v1.20.9
+  flavor: CPU2RAM4096HD20GB
+
+machineTemplates:
+  - image: ubuntu-2004-kube-v1.20.9
+    flavor: CPU2RAM4096HD20GB
+    name: worker
+  - image: ubuntu-2004-kube-v1.20.9
+    flavor: CPU2RAM4096HD20GB
+    name: other
+
+machineDeployments:
+  - name: workers
+    templateName: worker
+    replicas: 2
