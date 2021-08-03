@@ -10,3 +10,18 @@ clients demand us. At this time, we provide the following charts:
 
 We are planning to briefly add vsphere support.
 
+## Usage
+
+Add helm repo:
+
+```
+helm repo add mw-capi https://mikroways.github.io/cluster-api-helm/ 
+helm repo update
+```
+
+Then you can search for available cluster providers with:
+
+```
+helm repo search cluster-api
+```
+
