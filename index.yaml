@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   cluster-api-openstack:
   - apiVersion: v2
+    created: "2021-08-04T02:01:00.953092393Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: 5ab5c035d35a3ebcd70fe2cc840a8a385be95ef9fe90ee316c808c3fda0d6754
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - openstack
+    maintainers:
+    - email: christian.rodriguez@mikroways.net
+      name: Christian Rodriguez
+    name: cluster-api-openstack
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-openstack-1.0.2/cluster-api-openstack-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
     created: "2021-08-03T16:10:26.276284115Z"
     description: Install Cluster API manifests to generate a fully working Kubernetes cluster
     digest: 9df81bcd2eae1809acb3198c2a0fe14cb6d3e67fe2bbf7f3590f567607579794
