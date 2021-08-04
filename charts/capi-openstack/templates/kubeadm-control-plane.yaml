@@ -19,8 +19,11 @@ spec:
     {{ if .Values.kubeadm.files }}
     files:
     {{- toYaml .Values.kubeadm.files | nindent 8 }}
-    {{ end -}}
+    {{ end }}
     clusterConfiguration:
+    {{- if not (hasKey .Values.kubeadm.clusterConfiguration "clusterName") }}
+      clusterName: {{ include "capi-openstack.name" . }}
+    {{- end }}
     {{- toYaml ( required ".Values.kubeadm.clusterConfiguration"
         .Values.kubeadm.clusterConfiguration ) | nindent 6 }}
     initConfiguration:
