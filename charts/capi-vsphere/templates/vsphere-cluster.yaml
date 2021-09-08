@@ -25,7 +25,9 @@ spec:
         datacenters: {{ .Values.vsphere.cloudProviderConfiguration.workspace.datacenter }}
         thumbprint: {{ .Values.vsphere.thumbprint }}
     workspace: {{ include "capi-vsphere.vsphereCluster.workspace" . | nindent 6 }}
-  controlPlaneEndpoint: {{ toYaml .Values.vsphere.controlPlaneEndpoint | nindent 4 }}
+  controlPlaneEndpoint:
+    host: {{ required ".Values.vsphere.controlPlaneEndpoint.host" .Values.vsphere.controlPlaneEndpoint.host }}
+    port: {{ required ".Values.vsphere.controlPlaneEndpoint.port" .Values.vsphere.controlPlaneEndpoint.port }}
   identityRef:
     kind: Secret
     name: {{ include "capi-vsphere.cloudConfigSecretName" . }}

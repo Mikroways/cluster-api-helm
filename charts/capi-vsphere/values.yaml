@@ -44,7 +44,9 @@ vsphere:
     network: {}
     providerConfig: {}
     Workers: {}
-  controlPlaneEndpoint: null
+  controlPlaneEndpoint:
+    host: ""
+    port: ""
   identityRef: null
   insecure: false
   server: ""
@@ -101,7 +103,8 @@ machineTemplates: []
 #    replicas: 2
 machineDeployments: []
 
-controlPlaneEndpoint: <IP>
+kubeVip:
+  enabled: true
 
 # Kubeadm options. Each of these can be understood using:
 #   kubectl explain kubeadmcontrolplanes.spec.kubeadmConfigSpec
