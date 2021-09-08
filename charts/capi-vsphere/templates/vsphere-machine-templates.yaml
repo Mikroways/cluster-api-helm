@@ -12,21 +12,15 @@ spec:
       {{- with .Values.controlPlaneTemplate.customVMXKeys }}
       customVMXKeys: {{ toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.datacenter }}
-      datacenter: {{ . }}
-      {{- end }}
-      {{- with .Values.controlPlaneTemplate.datastore }}
-      datastore: {{ . }}
-      {{- end }}
+      datacenter: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.datacenter .Values.controlPlaneTemplate.datacenter }}
+      datastore: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.datastore .Values.controlPlaneTemplate.datastore }}
       {{- with .Values.controlPlaneTemplate.diskGiB }}
       diskGiB: {{ . }}
       {{- end }}
       {{- with .Values.controlPlaneTemplate.failureDomain }}
       failureDomain: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.folder }}
-      folder: {{ . }}
-      {{- end }}
+      folder: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.folder .Values.controlPlaneTemplate.folder }}
       {{- with .Values.controlPlaneTemplate.memoryMiB }}
       memoryMiB: {{ . }}
       {{- end }}
@@ -40,12 +34,8 @@ spec:
       {{- with .Values.controlPlaneTemplate.providerID }}
       providerID: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.resourcePool }}
-      resourcePool: {{ . }}
-      {{- end }}
-      {{- with .Values.controlPlaneTemplate.server }}
-      server: {{ . }}
-      {{- end }}
+      resourcePool: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.resourcePool .Values.controlPlaneTemplate.resourcePool }}
+      server: {{ default .Values.vsphere.server .Values.controlPlaneTemplate.server }}
       {{- with .Values.controlPlaneTemplate.snapshot }}
       snapshot: {{ . }}
       {{- end }}
@@ -53,9 +43,7 @@ spec:
       storagePolicyName: {{ . }}
       {{- end }}
       template: {{ required ".Values.controlPlaneTemplate.template is required" .Values.controlPlaneTemplate.template }}
-      {{- with .Values.controlPlaneTemplate.thumbprint }}
-      thumbprint: {{ . }}
-      {{- end }}
+      thumbprint: {{ default .Values.vsphere.thumbprint .Values.controlPlaneTemplate.thumbprint }}
 {{ range $index, $template := .Values.machineTemplates }}
 {{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
 ---
@@ -72,21 +60,15 @@ spec:
       {{- with $template.customVMXKeys }}
       customVMXKeys: {{ toYaml . | nindent 8 }}
       {{- end }}
-      {{- with $template.datacenter }}
-      datacenter: {{ . }}
-      {{- end }}
-      {{- with $template.datastore }}
-      datastore: {{ . }}
-      {{- end }}
+      datacenter: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.datacenter $template.datacenter }}
+      datastore: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.datastore $template.datastore }}
       {{- with $template.diskGiB }}
       diskGiB: {{ . }}
       {{- end }}
       {{- with $template.failureDomain }}
       failureDomain: {{ . }}
       {{- end }}
-      {{- with $template.folder }}
-      folder: {{ . }}
-      {{- end }}
+      folder: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.folder $template.folder }}
       {{- with $template.memoryMiB }}
       memoryMiB: {{ . }}
       {{- end }}
@@ -100,12 +82,8 @@ spec:
       {{- with $template.providerID }}
       providerID: {{ . }}
       {{- end }}
-      {{- with $template.resourcePool }}
-      resourcePool: {{ . }}
-      {{- end }}
-      {{- with $template.server }}
-      server: {{ . }}
-      {{- end }}
+      resourcePool: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.resourcePool $template.resourcePool }}
+      server: {{ default $.Values.vsphere.server $template.server }}
       {{- with $template.snapshot }}
       snapshot: {{ . }}
       {{- end }}
@@ -113,7 +91,5 @@ spec:
       storagePolicyName: {{ . }}
       {{- end }}
       template: {{ required (printf ".Values.machineTemplates[%d].template is required" $index) $template.template }}
-      {{- with $template.thumbprint }}
-      thumbprint: {{ . }}
-      {{- end }}
+      thumbprint: {{ default $.Values.vsphere.thumbprint $template.thumbprint }}
 {{ end }}

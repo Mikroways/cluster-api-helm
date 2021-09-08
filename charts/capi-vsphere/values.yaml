@@ -10,9 +10,6 @@ crsObjects:
   - calico-cni
   - ccm-vsphere
 
-# CRS to create a Secret for cloud-config.
-crsCloudConfigSecret: null
-
 # Use an existent cloud config yaml or provide one?
 cloudConfigSecret:
   # If defined, secret will not be created and must exist in specified namespace
@@ -40,11 +37,16 @@ clusterNetwork:
 # vsphere default values. All can be understood using
 #   kubectl explain vspherecluster.spec
 vsphere:
-  cloudProviderConfiguration: null
+  cloudProviderConfiguration:
+    disk: {}
+    global: {}
+    labels: {}
+    network: {}
+    providerConfig: {}
+    Workers: {}
   controlPlaneEndpoint: null
   identityRef: null
   insecure: false
-  loadBalancerRef: null
   server: ""
   thumbprint: ""
 
@@ -64,11 +66,12 @@ controlPlaneTemplate:
   numCoresPerSocket: null
   providerID: ""
   resourcePool: ""
-  server: ""
   snapshot: ""
   storagePolicyName: ""
   template: ""
   thumbprint: ""
+
+controlPlaneIP: ""
 
 # Define machine templates to be used. Is an array of objects, each with:
 #   - template: template name
@@ -98,6 +101,8 @@ machineTemplates: []
 #    replicas: 2
 machineDeployments: []
 
+controlPlaneEndpoint: <IP>
+
 # Kubeadm options. Each of these can be understood using:
 #   kubectl explain kubeadmcontrolplanes.spec.kubeadmConfigSpec
 #
@@ -105,54 +110,7 @@ machineDeployments: []
 kubeadm:
   preKubeadmCommands: []
   users: []
-  files:
-    - content: |
-        apiVersion: v1
-        kind: Pod
-        metadata:
-          creationTimestamp: null
-          name: kube-vip
-          namespace: kube-system
-        spec:
-          containers:
-          - args:
-            - start
-            env:
-            - name: vip_arp
-              value: "true"
-            - name: vip_leaderelection
-              value: "true"
-            - name: vip_address
-              value: 172.20.1.200
-            - name: vip_interface
-              value: eth0
-            - name: vip_leaseduration
-              value: "15"
-            - name: vip_renewdeadline
-              value: "10"
-            - name: vip_retryperiod
-              value: "2"
-            image: plndr/kube-vip:0.3.2
-            imagePullPolicy: IfNotPresent
-            name: kube-vip
-            resources: {}
-            securityContext:
-              capabilities:
-                add:
-                - NET_ADMIN
-                - SYS_TIME
-            volumeMounts:
-            - mountPath: /etc/kubernetes/admin.conf
-              name: kubeconfig
-          hostNetwork: true
-          volumes:
-          - hostPath:
-              path: /etc/kubernetes/admin.conf
-              type: FileOrCreate
-            name: kubeconfig
-        status: {}
-      owner: root:root
-      path: /etc/kubernetes/manifests/kube-vip.yaml
+  files: []
   clusterConfiguration:
     apiServer:
       extraArgs:

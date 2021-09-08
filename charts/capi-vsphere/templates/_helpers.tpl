@@ -72,12 +72,64 @@ Array of dnsNameservers to be configured for internal network
 {{- end -}}
 {{- end -}}
 
+{{/*
+Expand the VSphereCluster workspace propertie
+*/}}
+{{- define "capi-vsphere.vsphereCluster.workspace" -}}
+datacenter: {{ required ".Values.vsphere.cloudProviderConfiguration.workspace.datacenter is required" .Values.vsphere.cloudProviderConfiguration.workspace.datacenter }}
+datastore: {{ required ".Values.vsphere.cloudProviderConfiguration.workspace.datastore is required" .Values.vsphere.cloudProviderConfiguration.workspace.datastore }}
+folder: {{ .Values.vsphere.cloudProviderConfiguration.workspace.folder }}
+resourcePool: {{ .Values.vsphere.cloudProviderConfiguration.workspace.resourcePool }}
+server: {{ .Values.vsphere.server }}
+{{- end -}}
+
 {{- define "capi-vsphere.kubeadmControlPlaneName" -}}
 {{- printf "%s-control-plane" (include "capi-vsphere.name" .) |
       trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "capi-vsphere.crsCloudConfigName" -}}
-{{- printf "%s-crs-cloud-config" (include "capi-vsphere.name" .) |
+{{- define "capi-vsphere.crsCSIName" -}}
+{{- printf "%s-crs" (include "capi-vsphere.name" .) |
     trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "capi-vsphere.crsCSIClusterRoleName" -}}
+{{- printf "%s-clusterrole" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSIClusterRoleBindingName" -}}
+{{- printf "%s-clusterrolebinding" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSIServiceAccountName" -}}
+{{- printf "%s-serviceaccount" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSIDriverName" -}}
+{{- printf "%s-driver-name" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSIControllerDeploymentName" -}}
+{{- printf "%s-controller" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSINodeName" -}}
+{{- printf "%s-node" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSIInternalFeatureStateName" -}}
+{{- printf "%s-internal-feature-states" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCSIConfigName" -}}
+{{- printf "%s-config" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+

@@ -4,7 +4,6 @@ kind: Cluster
 metadata:
   labels:
     cluster.x-k8s.io/cluster-name: {{ include "capi-vsphere.name" . }}
-    {{ include "capi-vsphere.crsCloudConfigName" . }}: "true"
 {{ range $crs := .Values.crsObjects }}
 {{- $crsName := printf "%s-%s" (include "capi-vsphere.name" $) $crs | trunc 63 | trimSuffix "-" }}
     {{ $crsName }}: "true"
