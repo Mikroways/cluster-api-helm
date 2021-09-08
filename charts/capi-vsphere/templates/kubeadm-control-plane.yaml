@@ -1,0 +1,36 @@
+---
+apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: KubeadmControlPlane
+metadata:
+  name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+spec:
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: VSphereMachineTemplate
+    name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+  kubeadmConfigSpec:
+    {{ if $.Values.kubeadm.users }}
+    users: {{ toYaml $.Values.kubeadm.users | nindent 8 }}
+    {{ end }}
+    {{ if .Values.kubeadm.preKubeadmCommands }}
+    preKubeadmCommands:
+    {{- toYaml .Values.kubeadm.preKubeadmCommands | nindent 8 }}
+    {{ end -}}
+    {{ if .Values.kubeadm.files }}
+    files:
+    {{- toYaml .Values.kubeadm.files | nindent 8 }}
+    {{ end }}
+    clusterConfiguration:
+    {{- if not (hasKey .Values.kubeadm.clusterConfiguration "clusterName") }}
+      clusterName: {{ include "capi-vsphere.name" . }}
+    {{- end }}
+    {{- toYaml ( required ".Values.kubeadm.clusterConfiguration"
+        .Values.kubeadm.clusterConfiguration ) | nindent 6 }}
+    initConfiguration:
+    {{- toYaml (required ".Values.kubeadm.initConfiguration"
+        .Values.kubeadm.initConfiguration ) | nindent 6 }}
+    joinConfiguration:
+    {{- toYaml (required ".Values.kubeadm.joinConfiguration"
+        .Values.kubeadm.joinConfiguration ) | nindent 6 }}
+  replicas: {{ default 1 .Values.kubernetes.mastersReplicas }}
+  version: {{ required ".Values.kubernetes.version" .Values.kubernetes.version }}

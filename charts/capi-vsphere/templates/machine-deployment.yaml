@@ -1,0 +1,49 @@
+{{- range $index, $md := .Values.machineDeployments }}
+{{- $object := dict "MachineDeployment" $md "Index" $index "Context" $ -}}
+---
+apiVersion: cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: MachineDeployment
+metadata:
+  name: {{ include "capi-vsphere.machineDeploymentName" $object }}
+spec:
+  clusterName: {{ include "capi-vsphere.name" $ }}
+  replicas: {{ $md.replicas | default 1 }}
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+          kind: KubeadmConfigTemplate
+          name: {{ include "capi-vsphere.machineDeploymentName" $object }}
+      clusterName: {{ include "capi-vsphere.name" $ }}
+      failureDomain: {{ $md.failureDomain | default $.Values.vsphere.failureDomain }}
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+        kind: VSphereMachineTemplate
+        name: {{ include "capi-vsphere.machineTemplateNameFromMDObject" $object }}
+      version: {{ $.Values.kubernetes.version }}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ include "capi-vsphere.machineDeploymentName" $object }}
+spec:
+  template:
+    spec:
+      {{ if $.Values.kubeadm.users }}
+      users: {{ toYaml $.Values.kubeadm.users | nindent 8 }}
+      {{ end }}
+      joinConfiguration:
+      {{- toYaml (required ".Values.kubeadm.joinConfiguration"
+        $.Values.kubeadm.joinConfiguration ) | nindent 8 }}
+      {{ if $.Values.kubeadm.preKubeadmCommands }}
+      preKubeadmCommands:
+      {{- toYaml $.Values.kubeadm.preKubeadmCommands | nindent 8 }}
+      {{ end -}}
+      {{ if $.Values.kubeadm.files }}
+      files:
+      {{- toYaml $.Values.kubeadm.files | nindent 8 }}
+      {{ end -}}
+{{ end }}

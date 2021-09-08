@@ -1,0 +1,13 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: VSphereCluster
+metadata:
+  name: {{ include "capi-vsphere.name" . }}
+spec:
+  cloudProviderConfiguration: {{ toYaml .Values.vsphere.cloudProviderConfiguration | nindent 4 }}
+  controlPlaneEndpoint: {{ toYaml .Values.vsphere.controlPlaneEndpoint | nindent 4 }}
+  identityRef: {{ toYaml .Values.vsphere.identityRef | nindent 4 }}
+  insecure: {{ .Values.vsphere.insecure }}
+  loadBalancerRef: {{ toYaml .Values.vsphere.loadBalancerRef | nindent 4 }}
+  server: {{ .Values.vsphere.server }}
+  thumbprint: {{ .Values.vsphere.thumbprint }}

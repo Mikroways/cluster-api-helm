@@ -1,0 +1,119 @@
+{{- $cloudConfigSecret := include "capi-vsphere.cloudConfigSecret" .  -}}
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: VSphereMachineTemplate
+metadata:
+  name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+spec:
+  template:
+    spec:
+      {{- with .Values.controlPlaneTemplate.cloneMode }}
+      cloneMode: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.customVMXKeys }}
+      customVMXKeys: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.datacenter }}
+      datacenter: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.datastore }}
+      datastore: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.diskGiB }}
+      diskGiB: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.failureDomain }}
+      failureDomain: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.folder }}
+      folder: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.memoryMiB }}
+      memoryMiB: {{ . }}
+      {{- end }}
+      network: {{ toYaml (required ".Values.controlPlaneTemplate.network is required" .Values.controlPlaneTemplate.network) | nindent 8 }}
+      {{- with .Values.controlPlaneTemplate.numCPUs }}
+      numCPUs: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.numCoresPerSocket }}
+      numCoresPerSocket: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.providerID }}
+      providerID: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.resourcePool }}
+      resourcePool: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.server }}
+      server: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.snapshot }}
+      snapshot: {{ . }}
+      {{- end }}
+      {{- with .Values.controlPlaneTemplate.storagePolicyName }}
+      storagePolicyName: {{ . }}
+      {{- end }}
+      template: {{ required ".Values.controlPlaneTemplate.template is required" .Values.controlPlaneTemplate.template }}
+      {{- with .Values.controlPlaneTemplate.thumbprint }}
+      thumbprint: {{ . }}
+      {{- end }}
+{{ range $index, $template := .Values.machineTemplates }}
+{{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: VSphereMachineTemplate
+metadata:
+  name: {{ include "capi-vsphere.machineTemplateName" $object }}
+spec:
+  template:
+    spec:
+      {{- with $template.cloneMode }}
+      cloneMode: {{ . }}
+      {{- end }}
+      {{- with $template.customVMXKeys }}
+      customVMXKeys: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $template.datacenter }}
+      datacenter: {{ . }}
+      {{- end }}
+      {{- with $template.datastore }}
+      datastore: {{ . }}
+      {{- end }}
+      {{- with $template.diskGiB }}
+      diskGiB: {{ . }}
+      {{- end }}
+      {{- with $template.failureDomain }}
+      failureDomain: {{ . }}
+      {{- end }}
+      {{- with $template.folder }}
+      folder: {{ . }}
+      {{- end }}
+      {{- with $template.memoryMiB }}
+      memoryMiB: {{ . }}
+      {{- end }}
+      network: {{ toYaml (required (printf ".Values.machineTemplates[%d].network is required" $index) $template.network) | nindent 8 }}
+      {{- with $template.numCPUs }}
+      numCPUs: {{ . }}
+      {{- end }}
+      {{- with $template.numCoresPerSocket }}
+      numCoresPerSocket: {{ . }}
+      {{- end }}
+      {{- with $template.providerID }}
+      providerID: {{ . }}
+      {{- end }}
+      {{- with $template.resourcePool }}
+      resourcePool: {{ . }}
+      {{- end }}
+      {{- with $template.server }}
+      server: {{ . }}
+      {{- end }}
+      {{- with $template.snapshot }}
+      snapshot: {{ . }}
+      {{- end }}
+      {{- with $template.storagePolicyName }}
+      storagePolicyName: {{ . }}
+      {{- end }}
+      template: {{ required (printf ".Values.machineTemplates[%d].template is required" $index) $template.template }}
+      {{- with $template.thumbprint }}
+      thumbprint: {{ . }}
+      {{- end }}
+{{ end }}
