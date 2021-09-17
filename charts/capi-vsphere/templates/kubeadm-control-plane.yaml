@@ -67,7 +67,7 @@ spec:
         path: /etc/kubernetes/manifests/kube-vip.yaml
         {{- end }}
         {{- range .Values.kubeadm.files }}
-        {{ toYaml . | nindent 8 }}
+        - {{ toYaml . | nindent 8 }}
         {{- end }}
         {{- if and (not  .Values.kubeadm.files) (not .Values.kubeVip.enabled) }}
         []
