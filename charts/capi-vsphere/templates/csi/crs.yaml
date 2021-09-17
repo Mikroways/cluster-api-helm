@@ -26,3 +26,5 @@ spec:
     name: {{ include "capi-vsphere.crsCSIControllerDeploymentName" . }}
   - kind: ConfigMap
     name: {{ include "capi-vsphere.crsCSIInternalFeatureStateName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIStorageClassName" . }}

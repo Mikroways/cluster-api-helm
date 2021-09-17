@@ -133,3 +133,8 @@ server: {{ .Values.vsphere.server }}
     trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "capi-vsphere.crsCSIStorageClassName" -}}
+{{- printf "%s-sc" (include "capi-vsphere.crsCSIName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
