@@ -9,13 +9,13 @@ spec:
     kind: VSphereMachineTemplate
     name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
   kubeadmConfigSpec:
-    {{ if $.Values.kubeadm.users }}
-    users: {{ toYaml $.Values.kubeadm.users | nindent 8 }}
-    {{ end }}
-    {{ if .Values.kubeadm.preKubeadmCommands }}
+    {{- if $.Values.kubeadm.users }}
+    users: {{- toYaml $.Values.kubeadm.users | nindent 8 }}
+    {{- end }}
+    {{- if .Values.kubeadm.preKubeadmCommands }}
     preKubeadmCommands:
     {{- toYaml .Values.kubeadm.preKubeadmCommands | nindent 8 }}
-    {{ end -}}
+    {{- end }}
     files:
       {{- if .Values.kubeVip.enabled }}
       - content: |
@@ -66,9 +66,7 @@ spec:
         owner: root:root
         path: /etc/kubernetes/manifests/kube-vip.yaml
         {{- end }}
-        {{- range .Values.kubeadm.files }}
-        - {{ toYaml . | nindent 8 }}
-        {{- end }}
+        {{- toYaml .Values.kubeadm.files | nindent 6 }}
         {{- if and (not  .Values.kubeadm.files) (not .Values.kubeVip.enabled) }}
         []
         {{- end }}

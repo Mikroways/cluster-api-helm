@@ -4,10 +4,10 @@ kind: Cluster
 metadata:
   labels:
     cluster.x-k8s.io/cluster-name: {{ include "capi-vsphere.name" . }}
-{{ range $crs := .Values.crsObjects }}
+{{- range $crs := .Values.crsObjects }}
 {{- $crsName := printf "%s-%s" (include "capi-vsphere.name" $) $crs | trunc 63 | trimSuffix "-" }}
     {{ $crsName }}: "true"
-{{ end }}
+{{- end }}
   name: {{ include "capi-vsphere.name" . }}
 spec:
   clusterNetwork: {{ toYaml .Values.clusterNetwork | nindent 4 }}
