@@ -35,7 +35,7 @@ spec:
               - name: vip_leaderelection
                 value: "true"
               - name: vip_address
-                value: 172.20.1.200
+                value: {{ required ".Values.vsphere.controlPlaneEndpoint.host is required" .Values.vsphere.controlPlaneEndpoint.host }}
               - name: vip_interface
                 value: eth0
               - name: vip_leaseduration
