@@ -12,7 +12,7 @@ these commands:
 
   kubectl get md
 
-4. Get vsphere cluster information (you can get bastion IP address)
+4. Get vsphere cluster information
 
   kubectl get vspherecluster {{ include "capi-vsphere.name" . }}
 

@@ -122,13 +122,22 @@ kubeadm:
       extraArgs:
         cloud-provider: external
     imageRepository: k8s.gcr.io
+  useExperimentalRetryJoin: true
+  preKubeadmCommands:
+    - hostname "{{ ds.meta_data.hostname }}"
+    - echo "::1         ipv6-localhost ipv6-loopback" >/etc/hosts
+    - echo "127.0.0.1   localhost" >>/etc/hosts
+    - echo "127.0.0.1   {{ ds.meta_data.hostname }}" >>/etc/hosts
+    - echo "{{ ds.meta_data.hostname }}" >/etc/hostname
   initConfiguration:
     nodeRegistration:
+      criSocket: /var/run/containerd/containerd.sock
       kubeletExtraArgs:
         cloud-provider: external
       name: "{{ local_hostname }}"
   joinConfiguration:
     nodeRegistration:
+      criSocket: /var/run/containerd/containerd.sock
       kubeletExtraArgs:
         cloud-provider: external
       name: "{{ local_hostname }}"
