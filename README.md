@@ -6,9 +6,9 @@ generate a fully working Kubernetes cluster for different providers.
 Not all providers are implemented yet. We will be adding new providers as our
 clients demand us. At this time, we provide the following charts:
 
+* [vsphere](./charts/capi-vsphere)
 * [openstack](./charts/capi-openstack)
 
-We are planning to briefly add vsphere support.
 
 ## Usage
 
