@@ -116,7 +116,7 @@ data:
           volumes:
           - name: vsphere-config-volume
             secret:
-              secretName: csi-vsphere-config
+              secretName: {{ include "capi-vsphere.crsCSIConfigName" . }}
           - emptyDir: {}
             name: socket-dir
 kind: ConfigMap
