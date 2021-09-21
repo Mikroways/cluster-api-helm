@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+data:
+  data: |
+    apiVersion: storage.k8s.io/v1
+    kind: CSIDriver
+    metadata:
+      name: csi.vsphere.vmware.com
+    spec:
+      attachRequired: true
+kind: ConfigMap
+metadata:
+  name: {{ include "capi-vsphere.crsCSIDriverName" . }}

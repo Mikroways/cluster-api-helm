@@ -1,0 +1,144 @@
+---
+# CAPI version for every created manifest
+clusterapiVersion: v1alpha3
+
+# If CRS alpha feature is enabled, the following objects will be created
+# CRS manifests are provided at files/crs/<crs-name>/*yaml
+# There is a script to download provided manifests. But some of them would
+# require some modification because format restrictions
+crsObjects:
+  - calico-cni
+  - ccm-vsphere
+
+# Use an existent cloud config yaml or provide one?
+cloudConfigSecret:
+  # If defined, secret will not be created and must exist in specified namespace
+  # otherwise, username and password shall be specified.
+  name: null
+  namespace: null
+  username: ""
+  password: ""
+
+# kubernetes values
+kubernetes:
+  version: v1.20.9
+  # Only master replicas can be managed from this option. Workers are managed
+  # from machineDeployments section
+  mastersReplicas: 1
+
+# kubernetes cluster network data. You can view valid options using:
+#   kubectl explain cluster.spec.clusterNetwork
+clusterNetwork:
+  pods:
+    cidrBlocks:
+    - 192.168.0.0/16
+  serviceDomain: cluster.local
+
+# vsphere default values. All can be understood using
+#   kubectl explain vspherecluster.spec
+vsphere:
+  cloudProviderConfiguration:
+    disk: {}
+    global: {}
+    labels: {}
+    network: {}
+    providerConfig: {}
+    Workers: {}
+  controlPlaneEndpoint:
+    host: ""
+    port: ""
+  identityRef: null
+  insecure: false
+  server: ""
+  thumbprint: ""
+
+# Template image and flavor to used for master nodes
+#   kubectl explain vspheremachinetemplate.spec.template.spec
+controlPlaneTemplate:
+  cloneMode: ""
+  customVMXKeys: {}
+  datacenter: ""
+  datastore: ""
+  diskGiB: null
+  failureDomain: ""
+  folder: ""
+  memoryMiB: null
+  network: null
+  numCPUs: null
+  numCoresPerSocket: null
+  providerID: ""
+  resourcePool: ""
+  snapshot: ""
+  storagePolicyName: ""
+  template: ""
+  thumbprint: ""
+
+controlPlaneIP: ""
+
+# Define machine templates to be used. Is an array of objects, each with:
+#   - template: template name
+#     flavor: openstack  to be used
+#     image: image to be used. Must have kuebernetes preinstalled. See:
+#       https://github.com/kubernetes-sigs/image-builder
+#
+# For example:
+# machineTemplates:
+#   - image: ubuntu-2004-kube-v1.20.9
+#     flavor: CPU2RAM4096HD20GB
+#     name: workerTemplate
+
+machineTemplates: []
+
+# Define machine deployments as a list of objects, each with:
+#   - name:
+#     templateName: name of previously defined template
+#     replicas: number of replicas
+#
+# For example
+#  - name: production
+#    templateName: prodTemplate
+#    replicas: 3
+#  - name: develop
+#    templateName: smallTemplate
+#    replicas: 2
+machineDeployments: []
+
+kubeVip:
+  enabled: true
+
+# Kubeadm options. Each of these can be understood using:
+#   kubectl explain kubeadmcontrolplanes.spec.kubeadmConfigSpec
+#
+# Defaults are ok
+kubeadm:
+  preKubeadmCommands: []
+  users: []
+  files: []
+  clusterConfiguration:
+    apiServer:
+      extraArgs:
+        cloud-provider: external
+    controllerManager:
+      extraArgs:
+        cloud-provider: external
+    imageRepository: k8s.gcr.io
+  useExperimentalRetryJoin: true
+  preKubeadmCommands:
+    - hostname "{{ ds.meta_data.hostname }}"
+    - echo "::1         ipv6-localhost ipv6-loopback" >/etc/hosts
+    - echo "127.0.0.1   localhost" >>/etc/hosts
+    - echo "127.0.0.1   {{ ds.meta_data.hostname }}" >>/etc/hosts
+    - echo "{{ ds.meta_data.hostname }}" >/etc/hostname
+  initConfiguration:
+    nodeRegistration:
+      criSocket: /var/run/containerd/containerd.sock
+      kubeletExtraArgs:
+        cloud-provider: external
+      name: "{{ local_hostname }}"
+  joinConfiguration:
+    nodeRegistration:
+      criSocket: /var/run/containerd/containerd.sock
+      kubeletExtraArgs:
+        cloud-provider: external
+      name: "{{ local_hostname }}"
+

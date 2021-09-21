@@ -1,0 +1,36 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: VSphereCluster
+metadata:
+  name: {{ include "capi-vsphere.name" . }}
+spec:
+  cloudProviderConfiguration:
+    {{- with .Values.vsphere.cloudProviderConfiguration.disk }}
+    disk: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.vsphere.cloudProviderConfiguration.global }}
+    global: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.vsphere.cloudProviderConfiguration.labels }}
+    labels: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.vsphere.cloudProviderConfiguration.network }}
+    network: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.vsphere.cloudProviderConfiguration.providerConfig }}
+    providerConfig: {{ toYaml . | nindent 6 }}
+    {{- end }}
+    virtualCenter:
+      {{ .Values.vsphere.server }}:
+        datacenters: {{ .Values.vsphere.cloudProviderConfiguration.workspace.datacenter }}
+        thumbprint: {{ .Values.vsphere.thumbprint }}
+    workspace: {{ include "capi-vsphere.vsphereCluster.workspace" . | nindent 6 }}
+  controlPlaneEndpoint:
+    host: {{ required ".Values.vsphere.controlPlaneEndpoint.host" .Values.vsphere.controlPlaneEndpoint.host }}
+    port: {{ required ".Values.vsphere.controlPlaneEndpoint.port" .Values.vsphere.controlPlaneEndpoint.port }}
+  identityRef:
+    kind: Secret
+    name: {{ include "capi-vsphere.cloudConfigSecretName" . }}
+  insecure: {{ .Values.vsphere.insecure }}
+  server: {{ required ".Values.vsphere.server is required" .Values.vsphere.server }}
+  thumbprint: {{ .Values.vsphere.thumbprint }}

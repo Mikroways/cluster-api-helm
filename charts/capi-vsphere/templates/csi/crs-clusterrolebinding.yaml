@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+data:
+  data: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: {{ include "capi-vsphere.crsCSIClusterRoleBindingName" . }}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: {{ include "capi-vsphere.crsCSIClusterRoleName" . }}
+    subjects:
+    - kind: ServiceAccount
+      name: {{ include "capi-vsphere.crsCSIServiceAccountName" . }}
+      namespace: {{ .Release.Namespace }}
+kind: ConfigMap
+metadata:
+  name: {{ include "capi-vsphere.crsCSIClusterRoleBindingName" . }}
+

@@ -1,0 +1,30 @@
+---
+apiVersion: addons.cluster.x-k8s.io/v1alpha3
+kind: ClusterResourceSet
+metadata:
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ include "capi-vsphere.name" . }}
+  name: {{ include "capi-vsphere.crsCSIName" . }}
+spec:
+  clusterSelector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: {{ include "capi-vsphere.name" . }}
+  resources:
+  - kind: Secret
+    name: {{ include "capi-vsphere.crsCSIServiceAccountName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIClusterRoleName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIClusterRoleBindingName" . }}
+  - kind: Secret
+    name: {{ include "capi-vsphere.crsCSIConfigName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIDriverName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSINodeName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIControllerDeploymentName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIInternalFeatureStateName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCSIStorageClassName" . }}

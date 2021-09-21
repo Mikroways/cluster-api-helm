@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+data:
+  data: |
+    apiVersion: v1
+    data:
+      csi-migration: "false"
+    kind: ConfigMap
+    metadata:
+      name: internal-feature-states.csi.vsphere.vmware.com
+      namespace: kube-system
+kind: ConfigMap
+metadata:
+  name: {{ include "capi-vsphere.crsCSIInternalFeatureStateName" . }}

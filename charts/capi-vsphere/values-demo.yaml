@@ -1,0 +1,70 @@
+---
+vsphere:
+  cloudProviderConfiguration:
+    global:
+      secretName: cloud-provider-vsphere-credentials
+      secretNamespace: kube-system
+    network:
+      name: VID 1505
+    providerConfig:
+      cloud:
+        controllerImage: gcr.io/cloud-provider-vsphere/cpi/release/manager:v1.18.1
+    workspace:
+      datacenter: DatacenterCAPI
+      datastore: DatasotreCAPI
+      folder: mikroways
+      resourcePool: Produccion/Resources
+  controlPlaneEndpoint:
+    host: 172.20.1.200
+    port: 6443
+  identityRef:
+    kind: Secret
+    name: management-cluster
+  server: 172.20.0.170
+  thumbprint: A8:5D:D1:CE:54:8F:17:B6:B5:69:26:51:49:96:A5:47:C8:06:7C:36
+  insecure: true
+
+
+kubeadm:
+  users:
+    - name: mikroways
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      groups: sudo
+      shell: /bin/bash
+      sshAuthorizedKeys:
+        - ssh-rsa yourpublickey
+        - ssh-rsa otheruserpublickey
+
+cloudConfigSecret:
+  username: username
+  password: password
+
+controlPlaneTemplate:
+  cloneMode: linkedClone
+  diskGiB: 25
+  memoryMiB: 8192
+  network:
+    devices:
+    - dhcp4: true
+      networkName: VID 1505
+  numCPUs: 2
+  storagePolicyName: null
+  template: ubuntu-2004-kube-v1.20.7
+
+machineTemplates:
+  - name: workers
+    cloneMode: linkedClone
+    diskGiB: 25
+    memoryMiB: 8192
+    network:
+      devices:
+      - dhcp4: true
+        networkName: VID 1505
+    numCPUs: 2
+    storagePolicyName: null
+    template: ubuntu-2004-kube-v1.20.7
+
+machineDeployments:
+  - name: workers
+    templateName: workers
+    replicas: 2
