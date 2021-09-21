@@ -108,7 +108,7 @@ data:
             - mountPath: /csi
               name: socket-dir
           dnsPolicy: Default
-          serviceAccountName: vsphere-csi-controller
+          serviceAccountName: {{ include "capi-vsphere.crsCSIServiceAccountName" . }}
           tolerations:
           - effect: NoSchedule
             key: node-role.kubernetes.io/master
