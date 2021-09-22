@@ -130,4 +130,3 @@ data:
 kind: ConfigMap
 metadata:
   name: {{ include "capi-vsphere.crsCSINodeName" . }}
-  namespace: default
