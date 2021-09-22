@@ -13,7 +13,7 @@ data:
     subjects:
     - kind: ServiceAccount
       name: {{ include "capi-vsphere.crsCSIServiceAccountName" . }}
-      namespace: {{ .Release.Namespace }}
+      namespace: kube-system
 kind: ConfigMap
 metadata:
   name: {{ include "capi-vsphere.crsCSIClusterRoleBindingName" . }}
