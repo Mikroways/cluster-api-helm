@@ -63,6 +63,26 @@ entries:
     version: 1.0.0
   cluster-api-vsphere:
   - apiVersion: v2
+    created: "2021-10-13T17:52:18.176337189Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: f344a14e9123cb355125bfbbcc36193e3a12c8c4b5e0d1cf7cea52d118e96089
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - vsphere
+    maintainers:
+    - email: lucas.dicunzolo@mikroways.net
+      name: Lucas Di Cunzolo
+    name: cluster-api-vsphere
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-vsphere-1.0.2/cluster-api-vsphere-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
     created: "2021-09-27T21:24:22.642361423Z"
     description: Install Cluster API manifests to generate a fully working Kubernetes cluster
     digest: 7c35be4e5d7cb2f1b0e8f691d382df9daaaa10b331b08e2f43b677387597b28d
