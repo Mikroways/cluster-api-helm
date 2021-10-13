@@ -19,6 +19,12 @@ cloudConfigSecret:
   username: ""
   password: ""
 
+# Credentials to use by CSI controller
+csiConfigSecret:
+  # If not defined it uses cloudConfigSecret instead.
+  username: ""
+  password: ""
+
 # kubernetes values
 kubernetes:
   version: v1.20.9
