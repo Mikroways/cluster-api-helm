@@ -39,6 +39,10 @@ cloudConfigSecret:
   username: username
   password: password
 
+csiConfigSecret:
+  username: csi-user
+  password: password
+
 controlPlaneTemplate:
   cloneMode: linkedClone
   diskGiB: 25
