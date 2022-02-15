@@ -9,7 +9,7 @@ version of manifests.
 ## Requirements
 
 A working management CAPI cluster with CAPV support. This chart was developed with
- CAPI verison **v1alpha3** in mind.
+ CAPI verison **v1alpha3**, **v1alpha4** and **v1beta1** in mind.
 
 If capi has **ClusterResourceSets enabled**, we provided manifests to install:
 * Cloud config secret to be used by CSI and CCM

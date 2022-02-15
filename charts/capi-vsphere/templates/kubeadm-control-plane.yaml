@@ -4,10 +4,18 @@ kind: KubeadmControlPlane
 metadata:
   name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
 spec:
+  {{ if eq .Values.clusterapiVersion "v1alpha3" }}
   infrastructureTemplate:
     apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
     kind: VSphereMachineTemplate
     name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+  {{ else }}
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+      kind: VSphereMachineTemplate
+      name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+  {{ end }}
   kubeadmConfigSpec:
     {{- if $.Values.kubeadm.users }}
     users: {{- toYaml $.Values.kubeadm.users | nindent 8 }}
