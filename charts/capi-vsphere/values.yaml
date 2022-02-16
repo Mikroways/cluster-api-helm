@@ -1,6 +1,6 @@
 ---
 # CAPI version for every created manifest
-clusterapiVersion: v1alpha3
+clusterapiVersion: v1beta1
 
 # If CRS alpha feature is enabled, the following objects will be created
 # CRS manifests are provided at files/crs/<crs-name>/*yaml
