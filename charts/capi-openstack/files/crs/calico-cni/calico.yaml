@@ -3791,7 +3791,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: calico-node
-namespace: kube-system
+  namespace: kube-system
 
 ---
 # Source: calico/templates/calico-kube-controllers.yaml
