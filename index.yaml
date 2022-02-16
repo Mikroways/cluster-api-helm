@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   cluster-api-openstack:
   - apiVersion: v2
+    created: "2022-02-16T14:13:56.716820005Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: 3db19975069102d06b5fe6ae2ca4bf45f13bd7f7ced480a47c36474c6c9eb325
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - openstack
+    maintainers:
+    - email: christian.rodriguez@mikroways.net
+      name: Christian Rodriguez
+    name: cluster-api-openstack
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-openstack-1.1.0/cluster-api-openstack-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
     created: "2021-08-04T02:01:00.953092393Z"
     description: Install Cluster API manifests to generate a fully working Kubernetes cluster
     digest: 5ab5c035d35a3ebcd70fe2cc840a8a385be95ef9fe90ee316c808c3fda0d6754
@@ -62,6 +82,26 @@ entries:
     - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-openstack-1.0.0/cluster-api-openstack-1.0.0.tgz
     version: 1.0.0
   cluster-api-vsphere:
+  - apiVersion: v2
+    created: "2022-02-16T14:13:56.925005145Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: c9295051b0062e34e36a66bbec53a292601849bd9af930f997b939fd98197c3c
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - vsphere
+    maintainers:
+    - email: lucas.dicunzolo@mikroways.net
+      name: Lucas Di Cunzolo
+    name: cluster-api-vsphere
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-vsphere-1.1.0/cluster-api-vsphere-1.1.0.tgz
+    version: 1.1.0
   - apiVersion: v2
     created: "2021-10-13T17:52:18.176337189Z"
     description: Install Cluster API manifests to generate a fully working Kubernetes cluster
