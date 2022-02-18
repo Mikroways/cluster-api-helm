@@ -138,3 +138,43 @@ server: {{ .Values.vsphere.server }}
     trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "capi-vsphere.crsCCMName" -}}
+{{- printf "%s-ccm-crs" (include "capi-vsphere.name" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMClusterRoleName" -}}
+{{- printf "%s-clusterrole" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMConfigMapName" -}}
+{{- printf "%s-configmap" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMDaemonSetName" -}}
+{{- printf "%s-daemonset" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMRoleBindingName" -}}
+{{- printf "%s-rolebinding" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMSecretName" -}}
+{{- printf "%s-credentials" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMServiceName" -}}
+{{- printf "%s-service" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "capi-vsphere.crsCCMServiceAccountName" -}}
+{{- printf "%s-serviceaccount" (include "capi-vsphere.crsCCMName" .) |
+    trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
