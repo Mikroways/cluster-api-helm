@@ -1,4 +1,4 @@
-{{- if ne .Values.clusterapiVersion "v1alpha3" }}
+{{- if .Values.cloudControllerManager.enabled }}
 ---
 apiVersion: addons.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
 kind: ClusterResourceSet

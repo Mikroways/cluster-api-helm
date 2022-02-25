@@ -1,4 +1,4 @@
-{{- if ne .Values.clusterapiVersion "v1alpha3" }}
+{{- if .Values.cloudControllerManager.enabled }}
 ---
 apiVersion: v1
 data:
