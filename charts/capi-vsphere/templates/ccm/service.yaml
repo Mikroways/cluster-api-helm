@@ -1,0 +1,24 @@
+{{- if .Values.cloudControllerManager.enabled }}
+---
+apiVersion: v1
+data:
+  data: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        component: cloud-controller-manager
+      name: cloud-controller-manager
+      namespace: kube-system
+    spec:
+      ports:
+      - port: 443
+        protocol: TCP
+        targetPort: 43001
+      selector:
+        component: cloud-controller-manager
+      type: NodePort
+kind: ConfigMap
+metadata:
+  name: {{ include "capi-vsphere.crsCCMServiceName" . }}
+{{- end }}

@@ -1,0 +1,28 @@
+{{- if .Values.cloudControllerManager.enabled }}
+---
+apiVersion: v1
+data:
+  data: |
+    apiVersion: v1
+    data:
+      vsphere.conf: |
+        global:
+          secretName: cloud-provider-vsphere-credentials
+          secretNamespace: kube-system
+          thumbprint: {{ .Values.vsphere.thumbprint }}
+        vcenter:
+          {{ .Values.vsphere.server }}:
+            datacenters:
+            - '{{ .Values.vsphere.cloudProviderConfiguration.workspace.datacenter }}'
+            secretName: cloud-provider-vsphere-credentials
+            secretNamespace: kube-system
+            server: {{ .Values.vsphere.server }}
+            thumbprint: {{ .Values.vsphere.thumbprint }}
+    kind: ConfigMap
+    metadata:
+      name: vsphere-cloud-config
+      namespace: kube-system
+kind: ConfigMap
+metadata:
+  name: {{ include "capi-vsphere.crsCCMConfigMapName" . }}
+{{- end }}

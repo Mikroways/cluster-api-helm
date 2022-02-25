@@ -8,7 +8,12 @@ clusterapiVersion: v1beta1
 # require some modification because format restrictions
 crsObjects:
   - calico-cni
-  - ccm-vsphere
+
+# This will deploy the CloudControllerManager via CRS using the tempaltes
+# in templates/ccm
+# Disable it in versions below v1alpha4
+cloudControllerManager:
+  enabled: true
 
 # Use an existent cloud config yaml or provide one?
 cloudConfigSecret:

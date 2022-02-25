@@ -1,0 +1,28 @@
+{{- if .Values.cloudControllerManager.enabled }}
+---
+apiVersion: addons.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: ClusterResourceSet
+metadata:
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ include "capi-vsphere.name" . }}
+  name: {{ include "capi-vsphere.crsCCMName" . }}
+spec:
+  clusterSelector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: {{ include "capi-vsphere.name" . }}
+  resources:
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCCMClusterRoleName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCCMConfigMapName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCCMDaemonSetName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCCMRoleBindingName" . }}
+  - kind: Secret
+    name: {{ include "capi-vsphere.crsCCMSecretName" . }}
+  - kind: ConfigMap
+    name: {{ include "capi-vsphere.crsCCMServiceName" . }}
+  - kind: Secret
+    name: {{ include "capi-vsphere.crsCCMServiceAccountName" . }}
+{{- end }}
