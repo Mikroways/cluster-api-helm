@@ -7,7 +7,7 @@ metadata:
   name: {{ include "capi-vsphere.machineDeploymentName" $object }}
 spec:
   clusterName: {{ include "capi-vsphere.name" $ }}
-  replicas: {{ $md.replicas | default 1 }}
+  replicas: {{ $md.replicas | int  }}
   selector:
     matchLabels: null
   template:
