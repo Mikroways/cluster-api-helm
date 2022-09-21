@@ -5,8 +5,9 @@ apiVersion: cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
 kind: MachineHealthCheck
 metadata:
   name: {{ include "capi-vsphere.machineHealthChecksName" $object }}
+  namespace: {{ $md.namespace }}
 spec:
-  clusterName: {{ include "capi-vsphere.name" $ }}
+  clusterName: {{ $md.clusterName }}
   {{- with $md.maxUnhealthy }}
   maxUnhealthy: {{ . }}
   {{- end }}

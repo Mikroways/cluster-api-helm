@@ -75,6 +75,8 @@ machineDeployments:
 
 machineHealthChecks:
   - name: worker-check
+    namespace: worker-namespace
+    clusterName: capi-quickstart
     selector:
       matchLabels:
         nodepool: nodepool-0
@@ -86,6 +88,8 @@ machineHealthChecks:
         status: "False"
         timeout: 300s
   - name: management-check
+    namespace: control-plane-namespace
+    clusterName: capi-cluster
     maxUnhealthy: 40%
     selector:
       matchLabels:
