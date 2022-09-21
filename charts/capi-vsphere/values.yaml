@@ -114,6 +114,8 @@ machineTemplates: []
 #    replicas: 2
 machineDeployments: []
 
+machineHealthChecks: []
+
 kubeVip:
   enabled: true
 

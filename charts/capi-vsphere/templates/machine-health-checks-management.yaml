@@ -1,0 +1,36 @@
+{{- range $index, $md := .Values.machineHealthChecks }}
+{{- $object := dict "MachineHealthChecks" $md "Index" $index "Context" $ -}}
+---
+apiVersion: cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: MachineHealthCheck
+metadata:
+  name: {{ include "capi-vsphere.machineHealthChecksName" $object }}
+spec:
+  clusterName: {{ include "capi-vsphere.name" $ }}
+  {{- with $md.maxUnhealthy }}
+  maxUnhealthy: {{ . }}
+  {{- end }}
+  {{- if and $md.remediationTemplate ( ne $.Values.clusterapiVersion "v1alpha3" ) }}
+  remediationTemplate:
+    {{- toYaml $md.remediationTemplate | nindent 4 }}
+  {{- end }}
+  {{- with $md.nodeStartUpTimeout }}
+  nodeStartUpTimeout: {{ . }}
+  {{- end }}
+  selector:
+  {{- with $md.selector.matchLabels }}
+    matchLabels:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with $md.selector.matchExpressions }}
+    matchExpressions:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with $md.unhealthyConditions }}
+  unhealthyConditions:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if and $md.unhealthyRange ( ne $.Values.clusterapiVersion "v1alpha3" ) }}
+  unhealthyRange: {{ $md.unhealthyRange }}
+  {{- end }}
+{{ end }}
