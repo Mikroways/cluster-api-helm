@@ -21,6 +21,18 @@ range iteration
 {{- end -}}
 
 {{/*
+Returns a machineHealthCheckName from object because its always used inside a
+range iteration
+*/}}
+{{- define "capi-vsphere.machineHealthChecksName" -}}
+{{- $machineHCName:= required (
+      printf "name is required for .Values.machineHealthChecks.%d" .Index)
+      .MachineHealthChecks.name -}}
+{{- printf "%s-%s" (include "capi-vsphere.name" .Context) $machineHCName |
+      trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Returns a machineTemplateName from object because its always used inside a
 range iteration
 */}}
