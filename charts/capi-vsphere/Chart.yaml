@@ -7,7 +7,7 @@ keywords:
 - bootstrapping
 - kubernetes
 - vsphere
-version: 1.2.0
+version: 1.3.0
 appVersion: v1beta1
 home: https://cluster-api.sigs.k8s.io/
 sources:
