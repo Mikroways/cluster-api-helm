@@ -20,6 +20,9 @@ spec:
     {{- if $.Values.kubeadm.users }}
     users: {{- toYaml $.Values.kubeadm.users | nindent 8 }}
     {{- end }}
+    {{- if $.Values.kubeadm.ntp }}
+    ntp: {{- toYaml $.Values.kubeadm.ntp | nindent 8 }}
+    {{- end }}
     useExperimentalRetryJoin: {{ .Values.kubeadm.useExperimentalRetryJoin }}
     {{- if .Values.kubeadm.preKubeadmCommands }}
     preKubeadmCommands:

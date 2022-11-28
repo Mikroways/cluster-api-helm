@@ -126,6 +126,7 @@ kubeVip:
 kubeadm:
   preKubeadmCommands: []
   users: []
+  ntp: {}
   files: []
   clusterConfiguration:
     apiServer:
