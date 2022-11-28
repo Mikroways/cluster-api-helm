@@ -26,6 +26,10 @@ vsphere:
 
 
 kubeadm:
+  ntp:
+    enabled: true
+    servers:
+      - IP_ADDRESS
   users:
     - name: mikroways
       sudo: ALL=(ALL) NOPASSWD:ALL
