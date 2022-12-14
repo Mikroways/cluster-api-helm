@@ -89,9 +89,6 @@ machineDeployments:
   - name: other-workers
     templateName: workers
     replicas: 4
-    initConfiguration: {}
-    joinConfiguration: {}
-    preKubeadmCommands: []
 
 machineHealthChecks:
   - name: worker-check

@@ -104,16 +104,13 @@ machineTemplates: []
 #   - name: md name
 #     templateName: name of previously defined template
 #     replicas: number of replicas
-#     initConfiguration: md specific initial kubeadm configuration
-#     joinConfiguration: md specific join kubeadm configuration
-#     preKubeadmCommands: md specific commands to execute previous to kubeadm init
+#     initConfiguration: md specific initial kubeadm configuration (optional)
+#     joinConfiguration: md specific join kubeadm configuration (optional)
+#     preKubeadmCommands: md specific commands to execute previous to kubeadm init (optional)
 # For example
 #  - name: production
 #    templateName: prodTemplate
 #    replicas: 3
-#    initConfiguration: {} # if we don't set any value it needs to be empty
-#    joinConfiguration: {} # if we don't set any value it needs to be empty
-#    preKubeadmCommands: [] # if we don't set any value it needs to be empty
 #  - name: develop
 #    templateName: smallTemplate
 #    replicas: 2
@@ -127,11 +124,14 @@ machineTemplates: []
 #          another-value: test
 #    preKubeadmCommands:
 #      - echo "Hello"
-# Both initConfiguration and joinConfiguration are going to be merged with the
-# current value of .kubeadm.initConfiguration and .kubeadm.joinConfiguration
-# respectively
-# preKubeadmCommands are going to be appended at the beginning of
-# .kubeadm.preKubeadmCommands
+# Comments:
+# - Both .initConfiguration and .joinConfiguration are going to be merged with
+# the current value of .kubeadm.initConfiguration and .kubeadm.joinConfiguration
+# respectively. Consider that the md specifc configuration has more precedence
+# then the global one.
+# - In regards of preKubeadmCommands, these are going to be appended at the
+# beginning of .kubeadm.preKubeadmCommands.
+
 machineDeployments: []
 
 machineHealthChecks: []
