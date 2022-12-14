@@ -76,6 +76,19 @@ machineDeployments:
   - name: workers
     templateName: workers
     replicas: 2
+    initConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: overwrite
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: overwrite
+    preKubeadmCommands:
+      - echo "Hello"
+  - name: other-workers
+    templateName: workers
+    replicas: 4
 
 machineHealthChecks:
   - name: worker-check
