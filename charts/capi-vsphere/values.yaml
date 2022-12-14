@@ -7,7 +7,7 @@ clusterapiVersion: v1beta1
 # There is a script to download provided manifests. But some of them would
 # require some modification because format restrictions
 crsObjects:
-  - calico-cni
+  - calico-cni-3-24-3
 
 # This will deploy the CloudControllerManager via CRS using the tempaltes
 # in templates/ccm
@@ -100,18 +100,38 @@ controlPlaneIP: ""
 
 machineTemplates: []
 
-# Define machine deployments as a list of objects, each with:
-#   - name:
+# Define machine deployments (md) as a list of objects, each with:
+#   - name: md name
 #     templateName: name of previously defined template
 #     replicas: number of replicas
-#
+#     initConfiguration: md specific initial kubeadm configuration
+#     joinConfiguration: md specific join kubeadm configuration
+#     preKubeadmCommands: md specific commands to execute previous to kubeadm init
 # For example
 #  - name: production
 #    templateName: prodTemplate
 #    replicas: 3
+#    initConfiguration: {} # if we don't set any value it needs to be empty
+#    joinConfiguration: {} # if we don't set any value it needs to be empty
+#    preKubeadmCommands: [] # if we don't set any value it needs to be empty
 #  - name: develop
 #    templateName: smallTemplate
 #    replicas: 2
+#    initConfiguration:
+#      nodeRegistration:
+#        kubeletExtraArgs:
+#          cloud-provider: external
+#    joinConfiguration:
+#      nodeRegistration:
+#        kubeletExtraArgs:
+#          another-value: test
+#    preKubeadmCommands:
+#      - echo "Hello"
+# Both initConfiguration and joinConfiguration are going to be merged with the
+# current value of .kubeadm.initConfiguration and .kubeadm.joinConfiguration
+# respectively
+# preKubeadmCommands are going to be appended at the beginning of
+# .kubeadm.preKubeadmCommands
 machineDeployments: []
 
 machineHealthChecks: []

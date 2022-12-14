@@ -35,12 +35,15 @@ spec:
       {{- if $.Values.kubeadm.users }}
       users: {{ toYaml $.Values.kubeadm.users | nindent 8 }}
       {{- end }}
+      initConfiguration:
+      {{- toYaml (required ".Values.kubeadm.initConfiguration"
+        (mergeOverwrite (deepCopy $.Values.kubeadm.initConfiguration) (deepCopy $md.initConfiguration))) | nindent 8 }}
       joinConfiguration:
       {{- toYaml (required ".Values.kubeadm.joinConfiguration"
-        $.Values.kubeadm.joinConfiguration ) | nindent 8 }}
-      {{- if $.Values.kubeadm.preKubeadmCommands }}
+        (mergeOverwrite (deepCopy $.Values.kubeadm.joinConfiguration) (deepCopy $md.joinConfiguration))) | nindent 8 }}
+      {{- if (or $.Values.kubeadm.preKubeadmCommands $md.preKubeadmCommands)}}
       preKubeadmCommands:
-      {{- toYaml $.Values.kubeadm.preKubeadmCommands | nindent 8 }}
+      {{- toYaml (concat $md.preKubeadmCommands $.Values.kubeadm.preKubeadmCommands) | nindent 8 }}
       {{- end }}
       {{- if $.Values.kubeadm.files }}
       files:
