@@ -14,8 +14,8 @@ spec:
   remediationTemplate:
     {{- toYaml $md.remediationTemplate | nindent 4 }}
   {{- end }}
-  {{- with $md.nodeStartUpTimeout }}
-  nodeStartUpTimeout: {{ . }}
+  {{- with $md.nodeStartupTimeout }}
+  nodeStartupTimeout: {{ . }}
   {{- end }}
   selector:
   {{- with $md.selector.matchLabels }}
