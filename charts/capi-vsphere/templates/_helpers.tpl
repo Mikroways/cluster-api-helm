@@ -51,6 +51,21 @@ range iteration
 {{- printf "%s-%s" (include "capi-vsphere.name" .Context) $templateName |
       trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Returns a kubeadmControlPlaneName from object because its always used inside a
+range iteration
+*/}}
+{{- define "capi-vsphere.kubeadmControlPlaneTemplateName" -}}
+{{- $templateName:= .MachineTemplate.name -}}
+{{- if eq $templateName "" -}}
+{{- printf "%s-control-plane" (include "capi-vsphere.name" .Context) |
+      trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-control-plane-%s" (include "capi-vsphere.name" .Context) $templateName |
+      trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 {{/*
 Cloud config secret
 */}}

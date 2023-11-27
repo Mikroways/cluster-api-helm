@@ -30,12 +30,6 @@ csiConfigSecret:
   username: ""
   password: ""
 
-# kubernetes values
-kubernetes:
-  version: v1.20.9
-  # Only master replicas can be managed from this option. Workers are managed
-  # from machineDeployments section
-  mastersReplicas: 1
 
 # kubernetes cluster network data. You can view valid options using:
 #   kubectl explain cluster.spec.clusterNetwork
@@ -63,26 +57,32 @@ vsphere:
   server: ""
   thumbprint: ""
 
-# Template image and flavor to used for master nodes
+# Templates to use for master nodes
 #   kubectl explain vspheremachinetemplate.spec.template.spec
-controlPlaneTemplate:
-  cloneMode: ""
-  customVMXKeys: {}
-  datacenter: ""
-  datastore: ""
-  diskGiB: null
-  failureDomain: ""
-  folder: ""
-  memoryMiB: null
-  network: null
-  numCPUs: null
-  numCoresPerSocket: null
-  providerID: ""
-  resourcePool: ""
-  snapshot: ""
-  storagePolicyName: ""
-  template: ""
-  thumbprint: ""
+controlPlaneTemplates: []
+
+#For example:
+#controlPlaneTemplates:
+#   - name: ""
+#     cloneMode: ""
+#     customVMXKeys: {}
+#     datacenter: ""
+#     datastore: ""
+#     diskGiB: null
+#     failureDomain: ""
+#     folder: ""
+#     memoryMiB: null
+#     network: null
+#     numCPUs: null
+#     numCoresPerSocket: null
+#     providerID: ""
+#     resourcePool: ""
+#     snapshot: ""
+#     storagePolicyName: ""
+#     template: ""
+#     thumbprint: ""
+#   - name: "new"
+#     numCPUs: null
 
 controlPlaneIP: ""
 
@@ -144,6 +144,10 @@ kubeVip:
 #
 # Defaults are ok
 kubeadm:
+  masterReplicas: 1
+  version: v1.20.9
+  # must use one of the defined in controlPlaneTemplates
+  templateName: ""
   preKubeadmCommands: []
   users: []
   ntp: {}
@@ -175,4 +179,3 @@ kubeadm:
       kubeletExtraArgs:
         cloud-provider: external
       name: "{{ local_hostname }}"
-

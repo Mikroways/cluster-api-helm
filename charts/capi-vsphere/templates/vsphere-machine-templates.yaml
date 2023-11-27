@@ -1,49 +1,53 @@
 {{- $cloudConfigSecret := include "capi-vsphere.cloudConfigSecret" .  -}}
-apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+{{ range $index, $template := .Values.controlPlaneTemplates }}
+{{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
 kind: VSphereMachineTemplate
 metadata:
-  name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+  name: {{ include "capi-vsphere.kubeadmControlPlaneTemplateName" $object }}
 spec:
   template:
     spec:
-      {{- with .Values.controlPlaneTemplate.cloneMode }}
+      {{- with $template.cloneMode }}
       cloneMode: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.customVMXKeys }}
+      {{- with $template.customVMXKeys }}
       customVMXKeys: {{ toYaml . | nindent 8 }}
       {{- end }}
-      datacenter: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.datacenter .Values.controlPlaneTemplate.datacenter }}
-      datastore: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.datastore .Values.controlPlaneTemplate.datastore }}
-      {{- with .Values.controlPlaneTemplate.diskGiB }}
+      datacenter: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.datacenter $template.datacenter }}
+      datastore: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.datastore $template.datastore }}
+      {{- with $template.diskGiB }}
       diskGiB: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.failureDomain }}
+      {{- with $template.failureDomain }}
       failureDomain: {{ . }}
       {{- end }}
-      folder: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.folder .Values.controlPlaneTemplate.folder }}
-      {{- with .Values.controlPlaneTemplate.memoryMiB }}
+      folder: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.folder $template.folder }}
+      {{- with $template.memoryMiB }}
       memoryMiB: {{ . }}
       {{- end }}
-      network: {{ toYaml (required ".Values.controlPlaneTemplate.network is required" .Values.controlPlaneTemplate.network) | nindent 8 }}
-      {{- with .Values.controlPlaneTemplate.numCPUs }}
+      network: {{ toYaml (required ".Values.controlPlaneTemplate.network is required" $template.network) | nindent 8 }}
+      {{- with $template.numCPUs }}
       numCPUs: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.numCoresPerSocket }}
+      {{- with $template.numCoresPerSocket }}
       numCoresPerSocket: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.providerID }}
+      {{- with $template.providerID }}
       providerID: {{ . }}
       {{- end }}
-      resourcePool: {{ default .Values.vsphere.cloudProviderConfiguration.workspace.resourcePool .Values.controlPlaneTemplate.resourcePool }}
-      server: {{ default .Values.vsphere.server .Values.controlPlaneTemplate.server }}
-      {{- with .Values.controlPlaneTemplate.snapshot }}
+      resourcePool: {{ default $.Values.vsphere.cloudProviderConfiguration.workspace.resourcePool $template.resourcePool }}
+      server: {{ default $.Values.vsphere.server $template.server }}
+      {{- with $template.snapshot }}
       snapshot: {{ . }}
       {{- end }}
-      {{- with .Values.controlPlaneTemplate.storagePolicyName }}
+      {{- with $template.storagePolicyName }}
       storagePolicyName: {{ . }}
       {{- end }}
-      template: {{ required ".Values.controlPlaneTemplate.template is required" .Values.controlPlaneTemplate.template }}
-      thumbprint: {{ default .Values.vsphere.thumbprint .Values.controlPlaneTemplate.thumbprint }}
+      template: {{ required (printf ".Values.controlPlaneTemplates[%d].template is required" $index) $template.template }}
+      thumbprint: {{ default $.Values.vsphere.thumbprint $template.thumbprint }}
+{{ end }}
 {{ range $index, $template := .Values.machineTemplates }}
 {{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
 ---

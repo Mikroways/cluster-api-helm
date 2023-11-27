@@ -8,13 +8,13 @@ spec:
   infrastructureTemplate:
     apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
     kind: VSphereMachineTemplate
-    name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+    name: {{ default (include "capi-vsphere.kubeadmControlPlaneName" .) .Values.kubeadm.templateName }}
   {{- else }}
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
       kind: VSphereMachineTemplate
-      name: {{ include "capi-vsphere.kubeadmControlPlaneName" . }}
+      name: {{ default (include "capi-vsphere.kubeadmControlPlaneName" .) .Values.kubeadm.templateName }}
   {{- end }}
   kubeadmConfigSpec:
     {{- if $.Values.kubeadm.users }}
@@ -96,5 +96,5 @@ spec:
     joinConfiguration:
     {{- toYaml (required ".Values.kubeadm.joinConfiguration"
         .Values.kubeadm.joinConfiguration ) | nindent 6 }}
-  replicas: {{ default 1 .Values.kubernetes.mastersReplicas }}
-  version: {{ required ".Values.kubernetes.version" .Values.kubernetes.version }}
+  replicas: {{ default 1 .Values.kubeadm.masterReplicas }}
+  version: {{ required ".Values.kubeadm.version" .Values.kubeadm.version }}
