@@ -11,7 +11,7 @@ vsphere:
         controllerImage: gcr.io/cloud-provider-vsphere/cpi/release/manager:v1.18.1
     workspace:
       datacenter: DatacenterCAPI
-      datastore: DatasotreCAPI
+      datastore: DatastoreCAPI
       folder: mikroways
       resourcePool: Produccion/Resources
   controlPlaneEndpoint:
@@ -26,6 +26,7 @@ vsphere:
 
 
 kubeadm:
+  masterReplicas: 3
   ntp:
     enabled: true
     servers:
@@ -47,17 +48,29 @@ csiConfigSecret:
   username: csi-user
   password: password
 
-controlPlaneTemplate:
-  cloneMode: linkedClone
-  diskGiB: 25
-  memoryMiB: 8192
-  network:
-    devices:
-    - dhcp4: true
-      networkName: VID 1505
-  numCPUs: 2
-  storagePolicyName: null
-  template: ubuntu-2004-kube-v1.20.7
+controlPlaneTemplates:
+  - name: ""
+    cloneMode: linkedClone
+    diskGiB: 25
+    memoryMiB: 8192
+    network:
+      devices:
+      - dhcp4: true
+        networkName: VID 1505
+    numCPUs: 2
+    storagePolicyName: null
+    template: ubuntu-2004-kube-v1.20.7
+  - name: "cpu"
+    cloneMode: linkedClone
+    diskGiB: 25
+    memoryMiB: 8192
+    network:
+      devices:
+      - dhcp4: true
+        networkName: VID 1505
+    numCPUs: 4
+    storagePolicyName: null
+    template: ubuntu-2004-kube-v1.20.7
 
 machineTemplates:
   - name: workers

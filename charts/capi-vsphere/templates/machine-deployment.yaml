@@ -23,7 +23,7 @@ spec:
         apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
         kind: VSphereMachineTemplate
         name: {{ include "capi-vsphere.machineTemplateNameFromMDObject" $object }}
-      version: {{ $.Values.kubernetes.version }}
+      version: {{ $.Values.kubeadm.version }}
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
 kind: KubeadmConfigTemplate
