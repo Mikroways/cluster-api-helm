@@ -1,0 +1,21 @@
+---
+apiVersion: cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: Cluster
+metadata:
+  name: {{ include "capi-cloudstack.name" . }}
+  labels:
+    {{ include "capi-cloudstack.crsCloudConfigName" . }}: "true"
+{{ range $crs := .Values.crsObjects }}
+{{- $crsName := printf "%s-%s" (include "capi-cloudstack.name" $) $crs | trunc 63 | trimSuffix "-" }}
+    {{ $crsName }}: "true"
+{{ end }}
+spec:
+  clusterNetwork: {{ toYaml .Values.clusterNetwork | nindent 4 }}
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: KubeadmControlPlane
+    name: {{ include "capi-cloudstack.kubeadmControlPlaneName" . }}
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.cloudstackProviderVersion }}
+    kind: CloudStackCluster
+    name: {{ include "capi-cloudstack.name" . }}

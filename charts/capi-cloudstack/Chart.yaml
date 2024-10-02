@@ -1,0 +1,16 @@
+apiVersion: v2
+name: cluster-api-cloudstack
+description: Install Cluster API manifests to generate a fully working Kubernetes cluster 
+keywords:
+- clusterapi 
+- provisioning
+- bootstrapping 
+- kubernetes
+- cloudstack
+version: 0.1.0 
+home: https://cluster-api.sigs.k8s.io/ 
+sources:
+- https://cluster-api.sigs.k8s.io/
+maintainers:
+- name: Matias Gudin
+  email: matias.gudin@mikroways.net
