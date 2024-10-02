@@ -23,7 +23,7 @@ spec:
         $.Values.cloudstack.failureDomains.name )}}
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.cloudstackProviderVersion }}
-        kind: CloudstackMachineTemplate
+        kind: CloudStackMachineTemplate
         name: {{ include "capi-cloudstack.machineTemplateNameFromMDObject" $object }}
       version: {{ $.Values.kubernetes.version }}
 ---
