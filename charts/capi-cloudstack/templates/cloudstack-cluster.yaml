@@ -1,0 +1,22 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.cloudstackProviderVersion }}
+kind: CloudStackCluster
+metadata:
+  name: {{ include "capi-cloudstack.name" . }}
+spec:
+  controlPlaneEndpoint:
+    host: {{ .Values.cloudstack.controlPlaneEndpoint.host }}
+    port: {{ .Values.cloudstack.controlPlaneEndpoint.port }}
+  failureDomains: 
+  - acsEndpoint:
+      name: {{ if .Values.cloudstack.failureDomains.acsEndpoint.name -}} {{ .Values.cloudstack.failureDomains.acsEndpoint.name }} {{- else -}} {{ include "capi-cloudstack.cloudConfigSecretName" . }} {{- end }}
+      namespace: {{ if .Values.cloudstack.failureDomains.acsEndpoint.namespace -}} {{ .Values.cloudstack.failureDomains.acsEndpoint.namespace }} {{- else -}}{{ .Release.Namespace }} {{- end }}
+    name: {{ .Values.cloudstack.failureDomains.name }}
+    {{- if .Values.cloudstack.failureDomains.project }}
+    project: {{ .Values.cloudstack.failureDomains.project }}
+    {{- end }}
+    zone:
+      name: {{ .Values.cloudstack.failureDomains.zone.name }}
+      network:
+        name: {{ .Values.cloudstack.failureDomains.zone.network.name }}
+  syncWithAcs: {{ .Values.cloudstack.syncWithAcs }}

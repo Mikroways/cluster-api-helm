@@ -1,0 +1,41 @@
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.cloudstackProviderVersion }}
+kind: CloudStackMachineTemplate
+metadata:
+  name: {{ include "capi-cloudstack.kubeadmControlPlaneName" . }}
+spec:
+  template:
+    spec:
+      template: 
+        name: {{ required ".Values.controlPlaneTemplate.imageName is required" .Values.controlPlaneTemplate.imageName }}
+      offering:
+        name: {{ required ".Values.controlPlaneTemplate.offeringName is required" .Values.controlPlaneTemplate.offeringName }}
+      {{- if .Values.controlPlaneTemplate.sshKeyName }}
+      sshKey: {{ default .Values.controlPlaneTemplate.sshKeyName }}
+      {{- end }}
+      {{- if .Values.controlPlaneTemplate.details }}
+      details: 
+        {{ toYaml .Values.controlPlaneTemplate.details }}
+      {{- end }}
+
+{{ range $index, $template := .Values.machineTemplates }}
+{{- $object := dict "MachineTemplate" $template "Index" $index "Context" $ -}}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.cloudstackProviderVersion }}
+kind: CloudStackMachineTemplate
+metadata:
+  name: {{ include "capi-cloudstack.machineTemplateName" $object }}
+spec:
+  template:
+    spec:
+      template: 
+        name: {{ required (printf "imageName is required for .Values.machineTemplates.%d" $index) $template.imageName }}
+      offering:
+        name: {{ required (printf "offeringName is required for .Values.machineTemplates.%d" $index) $template.offeringName }}
+      {{- if $template.sshKeyName }}
+      sshKey: {{ $template.sshKeyName }}
+      {{- end }}
+      {{- if $template.details }}
+      details: 
+        {{ toYaml $template.details }}
+      {{- end }}
+{{ end }}

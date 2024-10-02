@@ -1,0 +1,121 @@
+---
+# CAPI version for every created manifest
+clusterapiVersion: v1beta1
+# Cloudstack provider version
+cloudstackProviderVersion: v1beta3
+
+# If CRS alpha feature is enabled, the following objects will be created
+# CRS manifests are provided at files/crs/<crs-name>/*yaml
+# There is a script to download provided manifests. But some of them would
+# require some modification because format restrictions
+crsObjects: []
+    #crsObjects:
+    #  - calico-cni
+    #  - ccm-cloudstack
+
+# CRS to create a Secret for cloud-config.
+crsCloudConfigSecret: null
+
+# Use an existent cloud config yaml or provide one?
+cloudConfigSecret:
+  # If defined, secret will not be created and must exist in specified namespace
+  # otherwise, apikey, secretKey, apiUrl shall be specified.
+  name: null
+  namespace: null
+  apiKey: null
+  secretKey: null
+  apiUrl: null
+  verifySSL: "false"
+
+# kubernetes values
+kubernetes:
+  version: v1.27.2
+  # Only master replicas can be managed from this option. Workers are managed
+  # from machineDeployments section
+  mastersReplicas: 1
+
+# kubernetes cluster network data. You can view valid options using:
+#   kubectl explain cluster.spec.clusterNetwork
+clusterNetwork:
+  pods:
+    cidrBlocks:
+    - 192.168.0.0/16
+  serviceDomain: cluster.local
+
+# Cloudstack default values. All can be understood using 
+#   kubectl explain cloudstackcluster.spec
+cloudstack:
+  controlPlaneEndpoint:
+    host: null
+    port: 6443
+  failureDomains:
+    acsEndpoint:
+      name: null
+      namespace: null
+    name: failure-domain-1
+    project: null
+    zone:
+      name: null
+      network:
+        name: null
+  syncWithAcs: false
+
+
+# Template image and flavor to used for master nodes
+controlPlaneTemplate:
+  imageName: null
+  offeringName: null
+  sshKeyName: ""
+  details: {}
+
+
+# Define machine templates to be used. Is an array of objects, each with:
+#   - name: template name
+#     imageName: vm template name to be used
+#     offeringName: compute offering to use with the image
+#     sshKeyName: name of an ssh key to use in the instance (optional)
+#     details: Deployent params to use on the vm. (optional)
+#
+# For example:
+# machineTemplates:
+#   - imageName: ubuntu-2004-kube-v1.20.9
+#     offeringName: someOffering
+#     name: custom
+machineTemplates: []
+
+# Define machine deployments as a list of objects, each with:
+#   - name:
+#     templateName: name of previously defined template
+#     replicas: number of replicas
+#
+# For example
+#  - name: production
+#    templateName: prodTemplate
+#    replicas: 3
+#  - name: develop
+#    templateName: smallTemplate
+#    replicas: 2
+machineDeployments: []
+
+# Kubeadm options. Each of these can be understood using:
+#   kubectl explain kubeadmcontrolplanes.spec.kubeadmConfigSpec
+#
+# Defaults are ok
+kubeadm:
+  preKubeadmCommands:
+    - swapoff -a
+  users: []
+  files: []
+  clusterConfiguration:
+    imageRepository: registry.k8s.io
+  initConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: cloudstack:///'{{ ds.meta_data.instance_id }}'
+      name: "{{ local_hostname }}"
+  joinConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: cloudstack:///'{{ ds.meta_data.instance_id }}'
+      name: "{{ local_hostname }}"
+
