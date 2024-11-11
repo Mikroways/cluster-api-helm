@@ -14,7 +14,7 @@ spec:
       {{- end }}
       {{- if .Values.controlPlaneTemplate.details }}
       details: 
-        {{ toYaml .Values.controlPlaneTemplate.details }}
+        {{ toYaml .Values.controlPlaneTemplate.details | nindent 8 }}
       {{- end }}
 
 {{ range $index, $template := .Values.machineTemplates }}
@@ -29,6 +29,10 @@ spec:
     spec:
       template: 
         name: {{ required (printf "imageName is required for .Values.machineTemplates.%d" $index) $template.imageName }}
+      {{- if $template.diskOffering }}
+      diskOffering:
+        {{- $template.diskOffering | toYaml | nindent 8 }}
+      {{- end }}
       offering:
         name: {{ required (printf "offeringName is required for .Values.machineTemplates.%d" $index) $template.offeringName }}
       {{- if $template.sshKeyName }}
@@ -36,6 +40,6 @@ spec:
       {{- end }}
       {{- if $template.details }}
       details: 
-        {{ toYaml $template.details }}
+        {{- toYaml $template.details | nindent 8 }}
       {{- end }}
 {{ end }}
