@@ -1,0 +1,35 @@
+{{- range $index, $md := .Values.machineDeployments }}
+{{- $object := dict "MachineDeployment" $md "Index" $index "Context" $ -}}
+{{- $dictTemplate := dict "name"
+      (required (printf "templateName must be set for .Values.machineDeployments[%d]"
+          $index) $md.templateName)
+      "Context" $ -}}
+{{- $dictKubeadmConfigTemplate := dict "name"
+      (required (printf "kubeadmConfigTemplateName must be set for .Values.machineDeployments[%d]"
+          $index) $md.kubeadmConfigTemplateName)
+      "Context" $ -}}
+---
+apiVersion: cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: MachineDeployment
+metadata:
+  name: {{ include "capi-proxmox.machineDeploymentName" $object }}
+spec:
+  clusterName: {{ include "capi-proxmox.name" $ }}
+  replicas: {{ $md.replicas | int  }}
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+          kind: KubeadmConfigTemplate
+        name: {{ include "capi-proxmox.findKubeadmConfigTemplate"
+            $dictKubeadmConfigTemplate }}
+      clusterName: {{ include "capi-proxmox.name" $ }}
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+        kind: ProxmoxMachineTemplate
+        name: {{ include "capi-proxmox.findTemplate" $dictTemplate }}
+      version: {{ default $object.version $.Values.kubeadmControlPlane.version }}
+{{- end }}

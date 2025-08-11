@@ -1,0 +1,23 @@
+---
+apiVersion: cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: Cluster
+metadata:
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ include "capi-proxmox.name" . }}
+{{- with .Values.clusterLabels }}
+  {{- toYaml . | nindent 4 -}}
+{{- end }}
+  name: {{ include "capi-proxmox.name" . }}
+spec:
+{{- with .Values.clusterNetwork }}
+  clusterNetwork:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: KubeadmControlPlane
+    name: {{ include "capi-proxmox.kubeadmControlPlaneName" . }}
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+    kind: ProxmoxCluster
+    name: {{ include "capi-proxmox.name" . }}

@@ -1,0 +1,21 @@
+You have provisionned a new Proxmox cluster. Get cluster information running
+these commands:
+1. Get clusters
+
+  kubectl get cluster
+
+2. Describe your cluster (requires clusterctl command)
+
+  clusterctl describe cluster {{ include "capi-proxmox.name" . }}
+
+3. Get machine deployments
+
+  kubectl get md
+
+4. Get vsphere cluster information
+
+  kubectl get proxmoxcluser {{ include "capi-proxmox.name" . }}
+
+5. Get kubeconfig for provisioned cluster
+
+  clusterctl get kubeconfig {{ include "capi-proxmox.name" . }}

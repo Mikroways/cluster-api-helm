@@ -1,0 +1,42 @@
+{{- $dictTemplate := dict "name"
+      (required "templateName must be set for .Values.kubeadmControlPlane.templateName"
+          .Values.kubeadmControlPlane.templateName)
+      "Context" $ -}}
+---
+apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: KubeadmControlPlane
+metadata:
+  name: {{ include "capi-proxmox.kubeadmControlPlaneName" . }}
+spec:
+  kubeadmConfigSpec:
+  {{- with (required ".Values.kubeadmControlPlane.files" .Values.kubeadmControlPlane.files) }}
+    files:
+      {{- tpl (toYaml .) $ | nindent 6 }}
+  {{- end }}
+  {{- with .Values.kubeadmControlPlane.ntp }}
+    ntp: 
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with (required ".Values.kubeadmControlPlane.initConfiguration" .Values.kubeadmControlPlane.initConfiguration ) }}
+    initConfiguration:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with (required ".Values.kubeadmControlPlane.joinConfiguration" .Values.kubeadmControlPlane.joinConfiguration ) }}
+    joinConfiguration:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.kubeadmControlPlane.preKubeadmCommands }}
+    preKubeadmCommands:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with (include "capi-proxmox.controlPlaneUsers" . | fromYaml) }}
+    users:
+      {{- toYaml .users | nindent 6 }}
+  {{- end }}
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+      kind: ProxmoxMachineTemplate
+      name: {{ include "capi-proxmox.findTemplate" $dictTemplate }}
+  replicas: {{ default 1 .Values.kubeadmControlPlane.replicas }}
+  version: {{ required ".Values.kubeadmControlPlane.version is required" .Values.kubeadmControlPlane.version }}

@@ -1,0 +1,84 @@
+{{- $list := .Values.controlPlaneTemplates -}}
+{{ range $index, $template := .Values.machineTemplates }}
+{{- $object := dict "ProxmoxMachineTemplate" $template "Index" $index "Context" $ -}}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: ProxmoxMachineTemplate
+metadata:
+  name: {{ include "capi-proxmox.machineTemplateName" $object }}
+spec:
+  template:
+    spec:
+      {{- with $template.allowedNodes }}
+        {{- if not (kindIs "slice" .) }}
+        {{- fail (printf ".Values.controlPlaneTemplates named %s must define allowedNodes as list" $template.name) }}
+        {{- end }}
+      allowedNodes:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $template.checks }}
+      checks:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $template.description }}
+      description:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (required "ProxmoxMachineTemplate must define diskSizeGb"
+            $template.diskSizeGb) }}
+      disks:
+        bootVolume:
+          disk: scsi0
+          sizeGb: {{ . }}
+      {{- end }}
+      {{- with (required "ProxmoxMachineTemplate must define format"
+            $template.format) }}
+      format: {{ . }}
+      {{- end }}
+      {{- with $template.full }}
+      full: {{ . }}
+      {{- end }}
+      {{- with (required "ProxmoxMachineTemplate must define memory"
+          $template.memory) }}
+      memoryMiB: {{ . }}
+      {{- end }}
+      {{- with $template.network }}
+      network:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (required "ProxmoxMachineTemplate must define numCores"
+            $template.numCores) }}
+      numCores: {{ . }}
+      {{- end }}
+      {{- with (required "ProxmoxMachineTemplate must define numSockets"
+            $template.numSockets) }}
+      numSockets: {{ . }}
+      {{- end }}
+      {{- with $template.pool }}
+      pool: {{ . }}
+      {{- end }}
+      {{- with $template.sourceNode }}
+      sourceNode: {{ . }}
+      {{- end }}
+      {{- with $template.storage }}
+      storage: {{ . }}
+      {{- end }}
+      {{- with $template.tags }}
+      tags:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $template.target }}
+      target: {{ . }}
+      {{- end }}
+      {{- with $template.templateID }}
+      templateID: {{ . }}
+      {{- end }}
+      {{- with $template.templateSelector }}
+      templateSelector:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $template.vmIDRange }}
+      vmIDRange:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+{{ end }}
