@@ -14,9 +14,9 @@ clusterctl generate cluster proxmox-mw \
 The following chart can be used
 
 ```bash
-helm repo add 
-helm upgrade --install --create-namespace -n 'k8s-management'
-cluster-api-proxmox/cluster-api-proxmox -f values.yaml
+helm repo add mw-capi https://mikroways.github.io/cluster-api-helm/
+helm upgrade --install --create-namespace -n 'k8s-management' \
+    mw-capi/cluster-api-proxmox -f values.yaml
 ```
 
 ## Requirements
