@@ -1,0 +1,236 @@
+---
+# CAPMOX version for every created manifest
+clusterapiVersion: v1beta1
+clusterLabels: {}
+users: []
+#  users:
+#    - name: root
+#      sshAuthorizedKeys:
+#      - ssh-rsa some ssh key
+
+# kubernetes cluster network data. You can view valid options using:
+#   kubectl explain cluster.spec.clusterNetwork
+clusterNetwork:
+  pods:
+    cidrBlocks:
+    - 192.168.0.0/16
+  serviceDomain: cluster.local
+
+# proxmox default values. All can be understood using
+#   kubectl explain ProxmoxCluster.spec
+proxmox:
+  # A list of allowed proxmox nodes to run k8s nodes
+  allowedNodes: null
+  controlPlaneEndpoint:
+    host: null
+    port: null
+  # A list of dns servers
+  dnsServers: null
+
+  ipv4Config:
+    # A list of ip ranges for IPAM
+    addresses: null
+    # - 192.168.41.101-192.168.41.120
+    gateway: null
+    prefix: null
+
+# Templates to use for master nodes
+#   kubectl explain ProxmoxMachineTemplate.spec.template.spec
+machineTemplates: []
+
+#For example:
+#machineTemplates:
+#  - name: "someName"
+#    allowedNodes: []
+#    checks:
+#      skipCloudInitStatus: <boolean>
+#      skipQemuGuestAgent: <boolean>
+#    description: ""
+#    diskSizeGb: <num>
+#    format: <string> raw, qcow2, vmdk
+#    full: <boolean>
+#    memory: <integer>
+#    network:
+#       default: <object>
+#         bridge: <string> -required-
+#         model: <string> e1000, virtio, rtl8139, vmxnet3
+#         vlan: <integer>
+#    numCores: <integer>
+#    numSockets: <integer>
+#    pool: <string>
+#    sourceNode: <string>
+#    storage: <string>
+#    tags: <[]string>
+#    target: <string>
+#    templateID: <integer>
+#    templateSelector: <Object>
+#      matchTags: <[]string> -required-
+#    vmIDRange: <Object>
+#      end: <integer> -required-
+#      start: <integer> -required-
+#
+
+# Main configuration for control plane nodes
+#   kubectl explain KubeadmControlPlane.spec
+kubeadmControlPlane:
+  machineTemplate: null #name of template
+  replicas: 1
+  version: null
+  # must use one of the defined in controlPlaneTemplates (whithout prefix)
+  templateName: ""
+#  users:
+#    - name: root
+#      sshAuthorizedKeys:
+#      - ssh-rsa some ssh key
+  ntp: {}
+  files:
+    - content: |
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          creationTimestamp: null
+          name: kube-vip
+          namespace: kube-system
+        spec:
+          containers:
+          - args:
+            - manager
+            env:
+            - name: cp_enable
+              value: "true"
+            - name: vip_interface
+              value: ""
+            - name: address
+              value: {{ .Values.proxmox.controlPlaneEndpoint.host | quote }}
+            - name: port
+              value: {{ .Values.proxmox.controlPlaneEndpoint.port | quote }}
+            - name: vip_arp
+              value: "true"
+            - name: vip_leaderelection
+              value: "true"
+            - name: vip_leaseduration
+              value: "15"
+            - name: vip_renewdeadline
+              value: "10"
+            - name: vip_retryperiod
+              value: "2"
+            image: ghcr.io/kube-vip/kube-vip:v0.7.1
+            imagePullPolicy: IfNotPresent
+            name: kube-vip
+            resources: {}
+            securityContext:
+              capabilities:
+                add:
+                - NET_ADMIN
+                - NET_RAW
+            volumeMounts:
+            - mountPath: /etc/kubernetes/admin.conf
+              name: kubeconfig
+          hostAliases:
+          - hostnames:
+            - localhost
+            - kubernetes
+            ip: 127.0.0.1
+          hostNetwork: true
+          volumes:
+          - hostPath:
+              path: /etc/kubernetes/admin.conf
+              type: FileOrCreate
+            name: kubeconfig
+        status: {}
+      owner: root:root
+      path: /etc/kubernetes/manifests/kube-vip.yaml
+    - content: |
+        #!/bin/bash
+
+        # Copyright 2020 The Kubernetes Authors.
+        #
+        # Licensed under the Apache License, Version 2.0 (the "License");
+        # you may not use this file except in compliance with the License.
+        # You may obtain a copy of the License at
+        #
+        #     http://www.apache.org/licenses/LICENSE-2.0
+        #
+        # Unless required by applicable law or agreed to in writing, software
+        # distributed under the License is distributed on an "AS IS" BASIS,
+        # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        # See the License for the specific language governing permissions and
+        # limitations under the License.
+
+        set -e
+
+        # Configure the workaround required for kubeadm init with kube-vip:
+        # xref: https://github.com/kube-vip/kube-vip/issues/684
+
+        # Nothing to do for kubernetes < v1.29
+        KUBEADM_MINOR="$(kubeadm version -o short | cut -d '.' -f 2)"
+        if [[ "$KUBEADM_MINOR" -lt "29" ]]; then
+          exit 0
+        fi
+
+        IS_KUBEADM_INIT="false"
+
+        # cloud-init kubeadm init
+        if [[ -f /run/kubeadm/kubeadm.yaml ]]; then
+          IS_KUBEADM_INIT="true"
+        fi
+
+        # ignition kubeadm init
+        if [[ -f /etc/kubeadm.sh ]] && grep -q -e "kubeadm init" /etc/kubeadm.sh; then
+          IS_KUBEADM_INIT="true"
+        fi
+
+        if [[ "$IS_KUBEADM_INIT" == "true" ]]; then
+          sed -i 's#path: /etc/kubernetes/admin.conf#path: /etc/kubernetes/super-admin.conf#' \
+            /etc/kubernetes/manifests/kube-vip.yaml
+        fi
+      owner: root:root
+      path: /etc/kube-vip-prepare.sh
+      permissions: "0700"
+
+  initConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+  joinConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+  preKubeadmCommands:
+    - /etc/kube-vip-prepare.sh
+
+# KubeadmConfigTemplates to create machines. 
+#   kubectl explain KubeadmConfigTemplate.spec.kubeadmConfigSpec
+#
+kubeadmConfigTemplates: []
+  #  - name: worker
+  #    joinConfiguration:
+  #      nodeRegistration:
+  #        kubeletExtraArgs:
+  #          provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+  #     users: []
+
+
+# Define machine deployments (md) as a list of objects, each with:
+machineDeployments: []
+
+# For example:
+# machineDeployments:
+#   - name: md name
+#     templateName: name of previously defined template (name will add prefix if
+#     defined)
+#     kubeadmConfigTemplate: name of previously defined kubeadmConfigTemplate
+#     (name will add prefix if defined)
+#     replicas: number of replicas
+#     version: k8s version
+# For example
+#   - name: production
+#     templateName: prodTemplate
+#     kubeadmConfigTemplateName: prodTemplate
+#     replicas: 3
+#     version: v1.32.5
+#   - name: develop
+#     templateName: devTemplate
+#     kubeadmConfigTemplateName: devTemplate
+#     replicas: 2
+#     version: v1.32.6

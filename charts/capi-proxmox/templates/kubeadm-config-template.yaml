@@ -1,0 +1,23 @@
+{{- $list := .Values.kubeadmConfigTemplates -}}
+{{ range $index, $template := $list }}
+{{- $object := dict "KubeadmConfigTemplate" $template
+          "Index" $index "Context" $ -}}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ include "capi-proxmox.kubeadmConfigTemplateName" $object }}
+spec:
+  template:
+    spec:
+      {{- with (include "capi-proxmox.kubeadmConfigUsers" $object | fromYaml) }}
+      users:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (required (printf 
+          ".Values.kubeadmConfigTemplates[%d].joinConfiguration" $index )
+              $template.joinConfiguration) }}
+      joinConfiguration:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

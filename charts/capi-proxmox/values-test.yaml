@@ -1,0 +1,66 @@
+users:
+  - name: root
+    sshAuthorizedKeys: 
+      - pepe
+clusterNetwork:
+  pods:
+    cidrBlocks:
+      - 10.100.0.0/16
+proxmox:
+  allowedNodes:
+    - pve
+  controlPlaneEndpoint:
+    host: 1.2.3.4
+    port: 6443
+  dnsServers:
+    - 1.1.1.1
+  ipv4Config:
+    addresses:
+      - 1.2.3.4-1.2.5.6
+    gateway: 11111
+    prefix: 24
+kubeadmControlPlane:
+  templateName: control-plane
+  version: 1.32.5
+  users:
+    - name: juan
+      sshAuthorizedKeys: 
+        - juan
+
+machineTemplates:
+  - name: control-plane
+    diskSizeGb: 60
+    format: raw
+    memory: 4096
+    numCores: 2
+    numSockets: 2
+    templateID: 101
+    network:
+       default:
+         bridge: vmbr0
+         model: virtio
+         vlan: 400
+  - name: worker
+    diskSizeGb: 60
+    format: raw
+    memory: 4096
+    numCores: 2
+    numSockets: 2
+    templateID: 101
+    network:
+       default:
+         bridge: vmbr0
+         model: virtio
+         vlan: 400
+
+machineDeployments:
+   - name: md name
+     templateName: worker
+     kubeadmConfigTemplateName: worker
+     replicas: 1
+kubeadmConfigTemplates:
+  - name: worker
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"

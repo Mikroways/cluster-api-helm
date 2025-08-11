@@ -1,0 +1,24 @@
+---
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+kind: ProxmoxCluster
+metadata:
+  name: {{ include "capi-proxmox.name" . }}
+spec:
+  controlPlaneEndpoint:
+    host: {{ required ".Values.proxmox.controlPlaneEndpoint.host is required" .Values.proxmox.controlPlaneEndpoint.host }}
+    port: {{ required ".Values.proxmox.controlPlaneEndpoint.port is required" .Values.proxmox.controlPlaneEndpoint.port }}
+{{- with (required ".Values.proxmox.allowedNodes is required" .Values.proxmox.allowedNodes) }}
+  allowedNodes:
+  {{- toYaml . | nindent 4 -}}
+{{- end }}
+{{- with (required ".Values.proxmox.dnsServers is required" .Values.proxmox.dnsServers) }}
+  dnsServers:
+  {{- toYaml . | nindent 4 -}}
+{{- end }}
+  ipv4Config:
+    {{- with (required ".Values.proxmox.ipv4Config.addresses is required" .Values.proxmox.ipv4Config.addresses) }}
+    addresses:
+      {{- toYaml . | nindent 6 -}}
+    {{- end }}
+    gateway: {{ required ".Values.proxmox.ipv4Config.gateway is required" .Values.proxmox.ipv4Config.gateway }}
+    prefix: {{ required ".Values.proxmox.ipv4Config.prefix is required" .Values.proxmox.ipv4Config.prefix }}
