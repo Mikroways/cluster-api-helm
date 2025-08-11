@@ -199,6 +199,13 @@ kubeadmControlPlane:
   preKubeadmCommands:
     - /etc/kube-vip-prepare.sh
 
+# This value will be merged with each kubeadmConfigTemplate
+kubeadmConfigTemplateDefaults:
+  joinConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+
 # KubeadmConfigTemplates to create machines. 
 #   kubectl explain KubeadmConfigTemplate.spec.kubeadmConfigSpec
 #
@@ -206,8 +213,10 @@ kubeadmConfigTemplates: []
   #  - name: worker
   #    joinConfiguration:
   #      nodeRegistration:
-  #        kubeletExtraArgs:
-  #          provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+  #        taints:
+  #          - key: role
+  #            value: storage
+  #            effect: NoSchedule
   #     users: []
 
 

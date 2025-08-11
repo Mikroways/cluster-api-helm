@@ -99,3 +99,7 @@ range iteration
 {{- printf "%s-%s" (include "capi-proxmox.name" .Context) $templateName |
       trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "capi-proxmox.kubeadmConfigTemplateJoinConfig" -}}
+{{- merge .Context.Values.kubeadmConfigTemplateDefaults .KubeadmConfigTemplate | toYaml }}
+{{- end -}}

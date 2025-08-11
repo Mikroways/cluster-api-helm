@@ -26,6 +26,12 @@ kubeadmControlPlane:
     - name: juan
       sshAuthorizedKeys: 
         - juan
+  initConfiguration:
+    nodeRegistration:
+      taints: []
+  joinConfiguration:
+    nodeRegistration:
+      taints: []
 
 machineTemplates:
   - name: control-plane
@@ -62,5 +68,7 @@ kubeadmConfigTemplates:
   - name: worker
     joinConfiguration:
       nodeRegistration:
-        kubeletExtraArgs:
-          provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+        taints:
+        - key: role
+          value: storage
+          effect: NoSchedule

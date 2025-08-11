@@ -14,9 +14,9 @@ spec:
       users:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with (required (printf 
-          ".Values.kubeadmConfigTemplates[%d].joinConfiguration" $index )
-              $template.joinConfiguration) }}
+      {{- with
+          (include "capi-proxmox.kubeadmConfigTemplateJoinConfig" $object |
+            fromYaml) }}
       joinConfiguration:
         {{- toYaml . | nindent 8 }}
       {{- end }}
