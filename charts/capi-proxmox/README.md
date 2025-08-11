@@ -1,40 +1,122 @@
-# cluster-api-vsphere
+# cluster-api-proxmox
 
-Install [Cluster API (CAPI)](https://cluster-api.sigs.k8s.io/) manifests to
-generate a fully working [Kubernetes vsphere cluster (CAPV provider)](https://github.com/kubernetes-sigs/cluster-api-provider-vsphere).
+Follow [Cluster API Provider for
+Porxmo](https://github.com/ionos-cloud/cluster-api-provider-proxmox)
+instructions. Instead of using:
 
-This chart replaces `clusterctl config cluster` by a customizable and enhanced 
-version of manifests.
+```bash
+clusterctl generate cluster proxmox-mw \
+    --infrastructure proxmox \
+    --control-plane-machine-count 1 \
+    --worker-machine-count 2 > cluster.yaml
+```
+
+The following chart can be used
+
+```bash
+helm repo add 
+helm upgrade --install --create-namespace -n 'k8s-management'
+cluster-api-proxmox/cluster-api-proxmox -f values.yaml
+```
 
 ## Requirements
 
-A working management CAPI cluster with CAPV support. This chart was developed with
- CAPI verison **v1alpha3**, **v1alpha4** and **v1beta1** in mind.
+As mentioned above, you can easily test this chart following capmox
+documentation. As a simple quick example, the following steps shall be done:
 
-If capi has **ClusterResourceSets enabled**, we provided manifests to install:
-* Cloud config secret to be used by CSI and CCM
-* External vsphere cloud controler manager
-* Calico manifests
+### First create a kind cluster
 
-> You can opt to include CCM and calico using values.
-
-## Quick start
-
-1. First copy `values.yaml` to start adjusting your custom values
-1. Run helm install:
-
-```
-helm install new-capv-cluster . -f values-dev.yaml
+```bash
+kind create cluster --name clusterctl
 ```
 
-The output notes will guide you to interact with you new cluster
+When cluster pods are all running, continue with next step.
+
+### Install clusterapi controllers
+
+Before running the following command please, verify all required environment
+variables are set as explained in capmox documentation.
+
+> Most important variables for this step are: `PROXMOX_URL`, `PROXMOX_TOKEN` and
+> `PROXMOX_SECRET`
+
+```bash
+clusterctl init --infrastructure proxmox --addon helm --ipam in-cluster
+```
+
+When all pods are isntalled and running, you can now create your first cluster
+using this chart
+
+## Example working example
+
+Asuming some PVE standards, and without using Proxmox pools and VLANs, the
+following `samples.yaml` can generate a working cluster:
+
+```yaml
+users:
+  - name: root
+    sshAuthorizedKeys: 
+      - ..... some ssh publick key
+clusterNetwork:
+  pods:
+    cidrBlocks:
+      - 10.100.0.0/16
+proxmox:
+  allowedNodes:
+    - pve
+  controlPlaneEndpoint:
+    host: 192.168.60.100   # Important! this must be changed
+    port: 6443
+  dnsServers:
+    - 1.1.1.1
+  ipv4Config:
+    addresses:
+      - 192.168.60.102-192.168.60.110
+    gateway: 192.168.60.1
+    prefix: 24
+kubeadmControlPlane:
+  templateName: control-plane
+  version: 1.32.5
+
+machineTemplates:
+  - name: control-plane
+    diskSizeGb: 60
+    format: raw
+    memory: 4096
+    numCores: 2
+    numSockets: 2
+    templateID: 101
+    network:
+       default:
+         bridge: vmbr0
+         model: virtio
+  - name: worker
+    diskSizeGb: 60
+    format: raw
+    memory: 4096
+    numCores: 2
+    numSockets: 2
+    templateID: 101
+    network:
+       default:
+         bridge: vmbr0
+         model: virtio
+
+machineDeployments:
+   - name: md name
+     templateName: worker
+     kubeadmConfigTemplateName: worker
+     replicas: 2
+kubeadmConfigTemplates:
+  - name: worker
+    joinConfiguration:
+      nodeRegistration:
+        kubeletExtraArgs:
+          provider-id: "proxmox://'{{ ds.meta_data.instance_id }}'"
+```
+
 
 ## Values
 
 To understand which values can be set, please read [`values.yaml`](./values.yaml).
 
-## TODO
-
-* This chart installs external cloud provider flavor, because is the recommended.
-  No other flavor is provided at this time. We don't think it will be necesary
-  to add other flavors, but it would be nice to have them.
