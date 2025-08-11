@@ -6,8 +6,10 @@ generate a fully working Kubernetes cluster for different providers.
 Not all providers are implemented yet. We will be adding new providers as our
 clients demand us. At this time, we provide the following charts:
 
-* [vsphere](./charts/capi-vsphere)
+* [cloudstack](./charts/capi-cloudstack)
 * [openstack](./charts/capi-openstack)
+* [proxmox](./charts/capi-proxmox)
+* [vsphere](./charts/capi-vsphere)
 
 
 ## Usage
