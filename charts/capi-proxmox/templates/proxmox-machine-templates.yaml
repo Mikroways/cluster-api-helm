@@ -14,15 +14,15 @@ spec:
         {{- fail (printf ".Values.controlPlaneTemplates named %s must define allowedNodes as list" $template.name) }}
         {{- end }}
       allowedNodes:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with $template.checks }}
       checks:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with $template.description }}
       description:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with (required "ProxmoxMachineTemplate must define diskSizeGb"
             $template.diskSizeGb) }}
@@ -75,10 +75,10 @@ spec:
       {{- end }}
       {{- with $template.templateSelector }}
       templateSelector:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with $template.vmIDRange }}
       vmIDRange:
-        {{ toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
 {{ end }}
