@@ -40,7 +40,12 @@ machineTemplates:
     memory: 4096
     numCores: 2
     numSockets: 2
-    templateID: 101
+    localStorage: true
+    templateSelector:
+      matchTags:
+        - k8s
+        - v1.32.5
+        - ubuntu-24.04
     network:
        default:
          bridge: vmbr0
