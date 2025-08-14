@@ -2,7 +2,7 @@
 {{ range $index, $template := .Values.machineTemplates }}
 {{- $object := dict "ProxmoxMachineTemplate" $template "Index" $index "Context" $ -}}
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
+apiVersion: infrastructure.cluster.x-k8s.io/{{ $.Values.capmoxApiVersion }}
 kind: ProxmoxMachineTemplate
 metadata:
   name: {{ include "capi-proxmox.machineTemplateName" $object }}

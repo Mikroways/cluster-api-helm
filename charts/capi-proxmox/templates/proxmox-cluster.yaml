@@ -1,5 +1,5 @@
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
+apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.capmoxApiVersion }}
 kind: ProxmoxCluster
 metadata:
   name: {{ include "capi-proxmox.name" . }}

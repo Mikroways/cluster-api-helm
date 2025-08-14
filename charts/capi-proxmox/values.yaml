@@ -1,5 +1,6 @@
 ---
 # CAPMOX version for every created manifest
+capmoxApiVersion: v1alpha1
 clusterapiVersion: v1beta1
 clusterLabels: {}
 users: []
