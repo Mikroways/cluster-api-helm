@@ -11,12 +11,12 @@ spec:
   template:
     spec:
       {{- with (include "capi-proxmox.kubeadmConfigUsers" $object | fromYaml) }}
-      users:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 6 }}
       {{- end }}
-      {{- with
-          (include "capi-proxmox.kubeadmConfigTemplateJoinConfig" $object |
-            fromYaml) }}
+      {{- with (
+            get (
+              fromYaml (include "capi-proxmox.kubeadmConfigTemplate" $object))
+              "joinConfiguration" | default list ) }}
       joinConfiguration:
         {{- toYaml . | nindent 8 }}
       {{- end }}
