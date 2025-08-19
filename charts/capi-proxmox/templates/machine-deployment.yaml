@@ -24,7 +24,7 @@ spec:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/{{ $.Values.clusterapiVersion }}
           kind: KubeadmConfigTemplate
-        name: {{ include "capi-proxmox.findKubeadmConfigTemplate"
+          name: {{ include "capi-proxmox.findKubeadmConfigTemplate"
             $dictKubeadmConfigTemplate }}
       clusterName: {{ include "capi-proxmox.name" $ }}
       infrastructureRef:
