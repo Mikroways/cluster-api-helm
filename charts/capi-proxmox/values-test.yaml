@@ -69,6 +69,10 @@ machineDeployments:
      templateName: worker
      kubeadmConfigTemplateName: worker
      replicas: 1
+   - name: md1 name
+     templateName: worker
+     kubeadmConfigTemplateName: worker
+     replicas: 1
 kubeadmConfigTemplates:
   - name: worker
     joinConfiguration:

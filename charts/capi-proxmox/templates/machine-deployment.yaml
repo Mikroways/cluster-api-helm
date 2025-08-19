@@ -1,4 +1,4 @@
-{{- range $index, $md := .Values.machineDeployments }}
+{{ range $index, $md := .Values.machineDeployments }}
 {{- $object := dict "MachineDeployment" $md "Index" $index "Context" $ -}}
 {{- $dictTemplate := dict "name"
       (required (printf "templateName must be set for .Values.machineDeployments[%d]"
@@ -32,4 +32,4 @@ spec:
         kind: ProxmoxMachineTemplate
         name: {{ include "capi-proxmox.findTemplate" $dictTemplate }}
       version: {{ default $object.version $.Values.kubeadmControlPlane.version }}
-{{- end }}
+{{ end }}
