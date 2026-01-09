@@ -1,0 +1,15 @@
+{{- if .Values.ipamProvider.enabled }}
+apiVersion: ipam.cluster.x-k8s.io/v1alpha2
+kind: InClusterIPPool
+metadata:
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ include "capi-proxmox.name" . | quote }}
+  name: {{ include "capi-proxmox.name" . }}
+spec:
+  addresses:
+  {{- range .Values.ipamProvider.ranges }}
+  - {{ . }}
+  {{- end }}
+  prefix: {{ .Values.ipamProvider.prefix }}
+  gateway: {{ .Values.ipamProvider.gateway }}
+{{- end }}

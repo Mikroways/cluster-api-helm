@@ -74,6 +74,7 @@ machineTemplates: []
 # Main configuration for control plane nodes
 #   kubectl explain KubeadmControlPlane.spec
 kubeadmControlPlane:
+  labels: {}
   machineTemplate: null #name of template
   replicas: 1
   version: null
@@ -244,3 +245,66 @@ machineDeployments: []
 #     kubeadmConfigTemplateName: devTemplate
 #     replicas: 2
 #     version: v1.32.6
+kamaji:
+  enabled: false
+  apiVersion: v1alpha1
+  controlPlane:
+    replicas: 1
+    dataStoreName: default
+    addons:
+      coreDNS: {}
+      kubeProxy: {}
+      konnectivity: {}
+    deployment:
+      # -- Additional metadata as labels and annotations
+      additionalMetadata: 
+        labels: {}
+        annotations: {}
+      # -- Pods Additional metadata as labels and annotations
+      podAdditionalMetadata:
+        labels: {}
+        annotations: {}
+      # -- Affinity scheduling rules
+      affinity: {}
+      # -- Tolerations for scheduling
+      tolerations: []
+      # -- NodeSelector for scheduling
+      nodeSelector:
+        kubernetes.io/os: linux
+      # -- TopologySpreadConstraints for scheduling
+      topologySpreadConstraints: []
+    kubelet:
+      # -- kubelet cgroupfs configuration
+      cgroupfs: systemd
+      # -- kubelet preferredAddressTypes order
+      preferredAddressTypes: []
+        # - InternalIP
+        # - ExternalIP
+        # - Hostname
+    network:
+      # -- Ingress configuration (optional)
+      # ingress: {}
+      # -- Type of service used to expose the Kubernetes API server
+      serviceType: LoadBalancer
+      # -- Address used to expose the Kubernetes API server. If not set, the service will be exposed on the first available address.
+      serviceAddress: ""
+      # When using MetalLB to expose the Control Plane, set as the following to specify a specific IP address for the service
+      # serviceAnnotations:
+      #   metallb.io/loadBalancerIPs: "{{ .Values.kamaji.controlPlane.network.serviceAddress| quote }}
+      # -- Labels to use for the control plane service
+      serviceLabels: {}
+      # -- List of additional Subject Alternative Names to use for the API Server serving certificate
+      certSANs: []
+    # -- Kubernetes version
+    version: v1.31.4      
+
+ipamProvider:
+  # -- Enable the IPAMProvider usage
+  enabled: false
+  # -- IPAMProvider ranges
+  ranges: []
+  #  - "192.168.100.10-192.168.100.250"
+  # -- IPAMProvider prefix
+  prefix: "24"
+  # -- IPAMProvider gateway
+  gateway: ""

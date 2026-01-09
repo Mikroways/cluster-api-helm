@@ -1,3 +1,4 @@
+{{- if not .Values.kamaji.enabled }}
 {{- $dictTemplate := dict "name"
       (required "templateName must be set for .Values.kubeadmControlPlane.templateName"
           .Values.kubeadmControlPlane.templateName)
@@ -7,6 +8,11 @@ apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
 kind: KubeadmControlPlane
 metadata:
   name: {{ include "capi-proxmox.kubeadmControlPlaneName" . }}
+  labels:
+    cluster.x-k8s.io/cluster-name: {{ include "capi-proxmox.name" . | quote }}
+    {{- with .Values.kubeadmControlPlane.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   kubeadmConfigSpec:
   {{- with (required ".Values.kubeadmControlPlane.files" .Values.kubeadmControlPlane.files) }}
@@ -40,3 +46,4 @@ spec:
       name: {{ include "capi-proxmox.findTemplate" $dictTemplate }}
   replicas: {{ default 1 .Values.kubeadmControlPlane.replicas }}
   version: {{ required ".Values.kubeadmControlPlane.version is required" .Values.kubeadmControlPlane.version }}
+{{- end }}
