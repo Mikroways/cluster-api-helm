@@ -1,6 +1,6 @@
 {{- if .Values.kamaji.enabled }}
 kind: {{ include "capi-proxmox.kubeadmControlPlaneKind" . }}
-apiVersion: kamaji.clastix.io/{{ .Values.kamaji.apiVersion }}
+apiVersion: {{ include "capi-proxmox.kubeadmControlPlaneApiVersion" . }}
 metadata:
   name: {{ include "capi-proxmox.name" . }}
   labels:

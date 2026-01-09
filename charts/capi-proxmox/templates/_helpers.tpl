@@ -111,3 +111,11 @@ range iteration
 {{- printf "KubeadmControlPlane" }}
 {{- end -}}
 {{- end -}}
+
+{{- define "capi-proxmox.kubeadmControlPlaneApiVersion" -}}
+{{- if .Values.kamaji.enabled }}
+{{- printf "%s/%s" "kamaji.clastix.io" .Values.kamaji.apiVersion }}
+{{- else -}}
+{{- printf "%s/%s" "controlplane.cluster.x-k8s.io" .Values.clusterapiVersion }}
+{{- end -}}
+{{- end -}}
