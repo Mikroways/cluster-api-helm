@@ -106,7 +106,7 @@ range iteration
 
 {{- define "capi-proxmox.kubeadmControlPlaneKind" -}}
 {{- if .Values.kamaji.enabled }}
-{{- printf "KamajiControlPlane" }}
+{{- printf "TenantControlPlane" }}
 {{- else -}}
 {{- printf "KubeadmControlPlane" }}
 {{- end -}}

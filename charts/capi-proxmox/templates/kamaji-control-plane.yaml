@@ -1,5 +1,5 @@
 {{- if .Values.kamaji.enabled }}
-kind: TenantControlPlane
+kind: {{ include "capi-proxmox.kubeadmControlPlaneKind" . }}
 apiVersion: kamaji.clastix.io/{{ .Values.kamaji.apiVersion }}
 metadata:
   name: {{ include "capi-proxmox.name" . }}

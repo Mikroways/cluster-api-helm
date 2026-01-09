@@ -5,7 +5,7 @@
       "Context" $ -}}
 ---
 apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
-kind: KubeadmControlPlane
+kind: {{ include "capi-proxmox.kubeadmControlPlaneKind" . }}
 metadata:
   name: {{ include "capi-proxmox.kubeadmControlPlaneName" . }}
   labels:
