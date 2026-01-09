@@ -2,7 +2,7 @@
 kind: {{ include "capi-proxmox.kubeadmControlPlaneKind" . }}
 apiVersion: {{ include "capi-proxmox.kubeadmControlPlaneApiVersion" . }}
 metadata:
-  name: {{ include "capi-proxmox.name" . }}
+  name:  {{ include "capi-proxmox.kubeadmControlPlaneName" . }}
   labels:
     kamaji.x-k8s.io/kamaji-name: {{ include "capi-proxmox.name" . | quote }}
     {{- with .Values.kubeadmControlPlane.labels }}
