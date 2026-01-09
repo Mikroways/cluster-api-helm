@@ -1,5 +1,5 @@
 {{- if .Values.kamaji.enabled }}
-kind: KamajiControlPlane
+kind: TenantControlPlane
 apiVersion: controlplane.kamaji.x-k8s.io/{{ .Values.kamaji.apiVersion }}
 metadata:
   name: {{ include "capi-proxmox.name" . }}
@@ -9,84 +9,25 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  dataStoreName: {{ .Values.kamaji.controlPlane.dataStoreName | quote }}
-  {{- with .Values.kamaji.controlPlane.addons }}
+  dataStore: {{ required "kamaki.controlPlane.dataStore is required" .Values.kamaji.dataStore | quote }}
+  {{- with (get .Values.kamaji "addons" | default dict) }}
   addons:
-    {{- if hasKey . "coreDNS" }}
-    coreDNS:
-      {{- toYaml .coreDNS | nindent 6 }}
-    {{- end }}
-    {{- if hasKey . "kubeProxy" }}
-    kubeProxy:
-      {{- toYaml .kubeProxy | nindent 6 }}
-    {{- end }}
-    {{- if hasKey . "konnectivity" }}
-    konnectivity:
-      {{- toYaml .konnectivity | nindent 6 }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
-  deployment:
-    additionalMetadata:
-      labels:
-        {{- with .Values.kamaji.controlPlane.deployment.additionalMetadata.labels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      annotations:
-        {{- with .Values.kamaji.controlPlane.deployment.additionalMetadata.annotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    podAdditionalMetadata:
-      labels:
-        {{- with .Values.kamaji.controlPlane.deployment.podAdditionalMetadata.labels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      annotations:
-        {{- with .Values.kamaji.controlPlane.deployment.podAdditionalMetadata.annotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    affinity:
-      {{- with .Values.kamaji.controlPlane.deployment.affinity }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-    tolerations:
-      {{- with .Values.kamaji.controlPlane.deployment.tolerations }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-    nodeSelector:
-      {{- with .Values.kamaji.controlPlane.deployment.nodeSelector }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-    topologySpreadConstraints:
-      {{- with .Values.kamaji.controlPlane.deployment.topologySpreadConstraints }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-  kubelet:
-    cgroupfs: {{ .Values.kamaji.controlPlane.kubelet.cgroupfs | quote }}
-    {{- if .Values.kamaji.controlPlane.kubelet.preferredAddressTypes }}
-    preferredAddressTypes:
-      {{- range .Values.kamaji.controlPlane.kubelet.preferredAddressTypes }}
-      - {{ . | quote }}
-      {{- end }}
-    {{- end }}
-  network:
-    {{- with .Values.kamaji.controlPlane.network.serviceAddress }}
-    serviceAddress: {{ . | quote }}
-    {{- end }}
-    serviceType: {{ .Values.kamaji.controlPlane.network.serviceType | quote }}
-    {{- with .Values.kamaji.controlPlane.network.serviceAnnotations }}
-    serviceAnnotations:
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-    {{- with .Values.kamaji.controlPlane.network.serviceLabels }}
-    serviceLabels:
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
-    {{- if .Values.kamaji.controlPlane.network.certSANs }}      
-    certSANs:
-      {{- range .Values.kamaji.controlPlane.network.certSANs }}
-      - {{ . | quote }}
-      {{- end }}
-    {{- end }}      
-  version: {{ .Values.kamaji.controlPlane.version | quote }}
-  replicas: {{ .Values.kamaji.controlPlane.replicas }}
+  {{- with (get .Values.kamaji "controlPlane" | default dict) }}
+  controlPlane:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with (get .Values.kamaji "kubernetes" | default dict) }}  
+  kubernetes:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with (get .Values.kamaji "networkProfile" | default dict) }}  
+  networkProfile:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+ {{- with (get .Values.kamaji "writePermissions" | default dict) }}  
+  writePermissions:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}  
+{{- end }}

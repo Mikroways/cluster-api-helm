@@ -1,2 +1,13 @@
 kamaji:
   enabled: true
+  addons:
+    addonOne:
+      someProperty: yes
+  controlPlane:
+    other: cp property
+  kuebrnetes:
+    version: 1.0
+  networkProfile:
+    profile: network 
+  writePermissions:
+    permission: one

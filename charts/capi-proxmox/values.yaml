@@ -248,55 +248,11 @@ machineDeployments: []
 kamaji:
   enabled: false
   apiVersion: v1alpha1
-  controlPlane:
-    replicas: 1
-    dataStoreName: default
-    addons:
-      coreDNS: {}
-      kubeProxy: {}
-      konnectivity: {}
-    deployment:
-      # -- Additional metadata as labels and annotations
-      additionalMetadata: 
-        labels: {}
-        annotations: {}
-      # -- Pods Additional metadata as labels and annotations
-      podAdditionalMetadata:
-        labels: {}
-        annotations: {}
-      # -- Affinity scheduling rules
-      affinity: {}
-      # -- Tolerations for scheduling
-      tolerations: []
-      # -- NodeSelector for scheduling
-      nodeSelector:
-        kubernetes.io/os: linux
-      # -- TopologySpreadConstraints for scheduling
-      topologySpreadConstraints: []
-    kubelet:
-      # -- kubelet cgroupfs configuration
-      cgroupfs: systemd
-      # -- kubelet preferredAddressTypes order
-      preferredAddressTypes: []
-        # - InternalIP
-        # - ExternalIP
-        # - Hostname
-    network:
-      # -- Ingress configuration (optional)
-      # ingress: {}
-      # -- Type of service used to expose the Kubernetes API server
-      serviceType: LoadBalancer
-      # -- Address used to expose the Kubernetes API server. If not set, the service will be exposed on the first available address.
-      serviceAddress: ""
-      # When using MetalLB to expose the Control Plane, set as the following to specify a specific IP address for the service
-      # serviceAnnotations:
-      #   metallb.io/loadBalancerIPs: "{{ .Values.kamaji.controlPlane.network.serviceAddress| quote }}
-      # -- Labels to use for the control plane service
-      serviceLabels: {}
-      # -- List of additional Subject Alternative Names to use for the API Server serving certificate
-      certSANs: []
-    # -- Kubernetes version
-    version: v1.31.4      
+  controlPlane: {}
+  dataStore: default
+  addons: {}
+  networkProfile: {}
+  writePermissions: {}
 
 ipamProvider:
   # -- Enable the IPAMProvider usage
