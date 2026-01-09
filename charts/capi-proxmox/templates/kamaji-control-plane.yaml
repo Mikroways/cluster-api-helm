@@ -1,6 +1,6 @@
 {{- if .Values.kamaji.enabled }}
 kind: TenantControlPlane
-apiVersion: controlplane.kamaji.x-k8s.io/{{ .Values.kamaji.apiVersion }}
+apiVersion: kamaji.clastix.io/{{ .Values.kamaji.apiVersion }}
 metadata:
   name: {{ include "capi-proxmox.name" . }}
   labels:
