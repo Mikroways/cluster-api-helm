@@ -118,4 +118,6 @@ kubeadm:
       kubeletExtraArgs:
         provider-id: cloudstack:///'{{ ds.meta_data.instance_id }}'
       name: "{{ local_hostname }}"
+  rolloutBefore: {}
+    # certificatesExpiryDays: 21
 

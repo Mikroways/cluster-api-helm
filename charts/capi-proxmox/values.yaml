@@ -78,6 +78,7 @@ kubeadmControlPlane:
   replicas: 1
   version: null
   rolloutBefore: {}
+    # certificatesExpiryDays: 21
   # must use one of the defined in controlPlaneTemplates (whithout prefix)
   templateName: ""
 #  users:
