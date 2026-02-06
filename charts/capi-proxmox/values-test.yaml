@@ -32,6 +32,8 @@ kubeadmControlPlane:
   joinConfiguration:
     nodeRegistration:
       taints: []
+  rolloutBefore:
+    certificatesExpiryDays: 21
 
 machineTemplates:
   - name: control-plane

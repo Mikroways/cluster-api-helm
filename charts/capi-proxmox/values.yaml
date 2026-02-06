@@ -77,6 +77,7 @@ kubeadmControlPlane:
   machineTemplate: null #name of template
   replicas: 1
   version: null
+  rolloutBefore: {}
   # must use one of the defined in controlPlaneTemplates (whithout prefix)
   templateName: ""
 #  users:

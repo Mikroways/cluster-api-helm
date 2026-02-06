@@ -33,6 +33,10 @@ spec:
     users:
       {{- toYaml .users | nindent 6 }}
   {{- end }}
+  {{- with .Values.kubeadmControlPlane.rolloutBefore }}
+  rolloutBefore:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
