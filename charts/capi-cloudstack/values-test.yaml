@@ -1,0 +1,79 @@
+---
+clusterapiVersion: v1beta1
+cloudstackProviderVersion: v1beta3
+
+crsCloudConfigSecret: super-secret
+cloudConfigSecret:
+  apiKey: api-key-secret
+  secretKey: api-secret-key-secret
+  apiUrl: http://api-url
+  verifySSL: false
+
+crsObjects:
+  - calico-cni
+  - ccm-cloudstack
+
+kubernetes:
+  version: v1.27.2
+  mastersReplicas: 1
+
+cloudstack:
+  controlPlaneEndpoint:
+    host: 192.168.3.2
+    port: 6443
+  failureDomains:
+    name: failure-domain-1
+    project: k8s
+
+
+controlPlaneTemplate:
+  imageName: kube-v1.27.2-ubuntu-20.04
+  offeringName: "Control Plane"
+  sshKeyName: ""
+  details:
+    disk.EnableUUID: "true"
+    rootdisksize: "60"
+
+
+machineTemplates:
+  - imageName: kube-v1.27.2-ubuntu-20.04
+    name: worker
+    offeringName: "Workers"
+    sshKeyName: ""
+    details:
+      disk.EnableUUID: "true"
+      rootdisksize: "60"
+
+machineDeployments:
+  - name: workers
+    templateName: worker
+    replicas: 3
+
+kubeadm:
+  preKubeadmCommands:
+    - swapoff -a
+  users:
+    - name: capc
+      sshAuthorizedKeys:
+        - ssh-rsa yourpublickey
+        - ssh-rsa otheruserpublickey
+      sudo: "ALL=(ALL) NOPASSWD:ALL"
+  files: []
+  clusterConfiguration:
+    imageRepository: registry.k8s.io
+  initConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: cloudstack:///'{{ ds.meta_data.instance_id }}'
+      name: "{{ local_hostname }}"
+  joinConfiguration:
+    nodeRegistration:
+      kubeletExtraArgs:
+        provider-id: cloudstack:///'{{ ds.meta_data.instance_id }}'
+      name: "{{ local_hostname }}"
+      taints:
+        - effect: NoSchedule
+          key: node.cloudprovider.kubernetes.io/uninitialized
+          value: "true"
+  rolloutBefore:
+    certificatesExpiryDays: 21
