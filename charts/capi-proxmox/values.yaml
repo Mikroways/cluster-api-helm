@@ -250,6 +250,9 @@ kamaji:
   apiVersion: v1alpha1
   dataStoreName: default
   addons: {}
+  controlPlane:
+    host: ""
+    port: ""
   network:
     serviceType: LoadBalancer
   kubelet:

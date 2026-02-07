@@ -3,6 +3,9 @@ kamaji:
   addons:
     addonOne:
       someProperty: yes
+  controlPlane:
+    host: "a"
+    port: "b"
   kubelet:
     cgroupfs: systemd
     preferredAddressTypes:
