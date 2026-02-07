@@ -9,25 +9,19 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  dataStore: {{ required "kamaki.controlPlane.dataStore is required" .Values.kamaji.dataStore | quote }}
+  dataStoreName: {{ required "kamaki.controlPlane.dataStoreName is required" .Values.kamaji.dataStoreName | quote }}
   {{- with (get .Values.kamaji "addons" | default dict) }}
   addons:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (get .Values.kamaji "controlPlane" | default dict) }}
-  controlPlane:
+  {{- with (get .Values.kamaji "kubelet" | default dict) }}
+  kubelet:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (get .Values.kamaji "kubernetes" | default dict) }}  
-  kubernetes:
+  {{- with (get .Values.kamaji "network" | default dict) }}
+  network:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (get .Values.kamaji "networkProfile" | default dict) }}  
-  networkProfile:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
- {{- with (get .Values.kamaji "writePermissions" | default dict) }}  
-  writePermissions:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}  
+  version: {{ required ".Values.kubeadmControlPlane.version is required" .Values.kubeadmControlPlane.version }}
+  replicas: {{ default 1 .Values.kubeadmControlPlane.replicas }}
 {{- end }}

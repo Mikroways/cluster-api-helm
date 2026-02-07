@@ -248,11 +248,12 @@ machineDeployments: []
 kamaji:
   enabled: false
   apiVersion: v1alpha1
-  controlPlane: {}
-  dataStore: default
+  dataStoreName: default
   addons: {}
-  networkProfile: {}
-  writePermissions: {}
+  network:
+    serviceType: LoadBalancer
+  kubelet:
+    cgroupfs: systemd
 
 ipamProvider:
   # -- Enable the IPAMProvider usage

@@ -3,11 +3,11 @@ kamaji:
   addons:
     addonOne:
       someProperty: yes
-  controlPlane:
-    other: cp property
-  kuebrnetes:
-    version: 1.0
-  networkProfile:
-    profile: network 
-  writePermissions:
-    permission: one
+  kubelet:
+    cgroupfs: systemd
+    preferredAddressTypes:
+    - InternalIP
+    - ExternalIP
+    - Hostname
+  network:
+    serviceType: LoadBalancer
