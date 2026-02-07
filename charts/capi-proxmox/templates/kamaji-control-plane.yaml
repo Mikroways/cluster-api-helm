@@ -11,8 +11,8 @@ metadata:
 spec:
   dataStoreName: {{ required "kamaki.dataStoreName is required" .Values.kamaji.dataStoreName | quote }}
   kamajiControlPlane:
-    host: {{ required "kamaji.controlPlane.host"  .Values.kamaji.controlPlane.host }}
-    port:  {{ required "kamaji.controlPlane.host" .Values.kamaji.controlPlane.port }}
+    host: {{ required "kamaji.controlPlane.host" .Values.kamaji.controlPlane.host }}
+    port: {{ required "kamaji.controlPlane.host" .Values.kamaji.controlPlane.port }}
   {{- with (get .Values.kamaji "addons" | default dict) }}
   addons:
     {{- toYaml . | nindent 4 }}
