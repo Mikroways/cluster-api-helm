@@ -179,3 +179,5 @@ kubeadm:
       kubeletExtraArgs:
         cloud-provider: external
       name: "{{ local_hostname }}"
+  rolloutBefore: {}
+    # certificatesExpiryDays: 21

@@ -7,7 +7,7 @@ keywords:
 - bootstrapping 
 - kubernetes
 - cloudstack
-version: 0.2.0
+version: 0.3.0
 home: https://cluster-api.sigs.k8s.io/ 
 sources:
 - https://cluster-api.sigs.k8s.io/

@@ -39,6 +39,8 @@ kubeadm:
       sshAuthorizedKeys:
         - ssh-rsa yourpublickey
         - ssh-rsa otheruserpublickey
+  rolloutBefore:
+    certificatesExpiryDays: 21
 
 cloudConfigSecret:
   username: username
