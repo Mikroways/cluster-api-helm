@@ -14,8 +14,8 @@ spec:
   {{- toYaml . | nindent 4 }}
 {{- end }}
   controlPlaneRef:
-    apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}
-    kind: KubeadmControlPlane
+    apiVersion: {{ include "capi-proxmox.kubeadmControlPlaneApiVersion" . }}
+    kind: {{ include "capi-proxmox.kubeadmControlPlaneKind" . }}
     name: {{ include "capi-proxmox.kubeadmControlPlaneName" . }}
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/{{ .Values.clusterapiVersion }}

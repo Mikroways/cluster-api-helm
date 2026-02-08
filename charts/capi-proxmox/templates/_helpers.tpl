@@ -103,3 +103,19 @@ range iteration
 {{- define "capi-proxmox.kubeadmConfigTemplate" -}}
 {{- merge .Context.Values.kubeadmConfigTemplateDefaults .KubeadmConfigTemplate | toYaml }}
 {{- end -}}
+
+{{- define "capi-proxmox.kubeadmControlPlaneKind" -}}
+{{- if .Values.kamaji.enabled }}
+{{- printf "KamajiControlPlane" }}
+{{- else -}}
+{{- printf "KubeadmControlPlane" }}
+{{- end -}}
+{{- end -}}
+
+{{- define "capi-proxmox.kubeadmControlPlaneApiVersion" -}}
+{{- if .Values.kamaji.enabled }}
+{{- printf "%s/%s" "controlplane.cluster.x-k8s.io" .Values.kamaji.apiVersion }}
+{{- else -}}
+{{- printf "%s/%s" "controlplane.cluster.x-k8s.io" .Values.clusterapiVersion }}
+{{- end -}}
+{{- end -}}

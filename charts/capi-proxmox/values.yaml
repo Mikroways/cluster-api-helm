@@ -74,6 +74,7 @@ machineTemplates: []
 # Main configuration for control plane nodes
 #   kubectl explain KubeadmControlPlane.spec
 kubeadmControlPlane:
+  labels: {}
   machineTemplate: null #name of template
   replicas: 1
   version: null
@@ -246,3 +247,26 @@ machineDeployments: []
 #     kubeadmConfigTemplateName: devTemplate
 #     replicas: 2
 #     version: v1.32.6
+kamaji:
+  enabled: false
+  apiVersion: v1alpha1
+  dataStoreName: default
+  addons: {}
+  controlPlane:
+    host: ""
+    port: ""
+  network:
+    serviceType: LoadBalancer
+  kubelet:
+    cgroupfs: systemd
+
+ipamProvider:
+  # -- Enable the IPAMProvider usage
+  enabled: false
+  # -- IPAMProvider ranges
+  ranges: []
+  #  - "192.168.100.10-192.168.100.250"
+  # -- IPAMProvider prefix
+  prefix: "24"
+  # -- IPAMProvider gateway
+  gateway: ""

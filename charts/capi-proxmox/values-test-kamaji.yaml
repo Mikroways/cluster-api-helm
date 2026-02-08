@@ -1,0 +1,16 @@
+kamaji:
+  enabled: true
+  addons:
+    addonOne:
+      someProperty: yes
+  controlPlane:
+    host: "a"
+    port: "b"
+  kubelet:
+    cgroupfs: systemd
+    preferredAddressTypes:
+    - InternalIP
+    - ExternalIP
+    - Hostname
+  network:
+    serviceType: LoadBalancer
