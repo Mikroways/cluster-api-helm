@@ -120,3 +120,6 @@ kubeadmConfigTemplates:
 
 To understand which values can be set, please read [`values.yaml`](./values.yaml).
 
+## Kamaji support
+
+Enabled kamaji beta support
