@@ -92,6 +92,10 @@ machineTemplates: []
 #  - name: production
 #    templateName: prodTemplate
 #    replicas: 3
+#    kubeadm:
+#     preKubeadmCommands:
+#       - swapoff -a
+#       - sudo apt update
 #  - name: develop
 #    templateName: smallTemplate
 #    replicas: 2
