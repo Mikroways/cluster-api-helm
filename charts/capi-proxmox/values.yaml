@@ -192,6 +192,14 @@ kubeadmControlPlane:
       path: /etc/kube-vip-prepare.sh
       permissions: "0700"
 
+  clusterConfiguration: {}
+  #  clusterConfiguration:
+  #    apiServer:
+  #      extraArgs:
+  #        oidc-issuer-url: https://accounts.example.com
+  #    controllerManager:
+  #      extraArgs:
+  #        bind-address: 0.0.0.0
   initConfiguration:
     nodeRegistration:
       kubeletExtraArgs:

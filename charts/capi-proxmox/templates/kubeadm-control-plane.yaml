@@ -31,6 +31,10 @@ spec:
     joinConfiguration:
       {{- toYaml . | nindent 6 }}
   {{- end }}
+  {{- with .Values.kubeadmControlPlane.clusterConfiguration }}
+    clusterConfiguration:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
   {{- with .Values.kubeadmControlPlane.preKubeadmCommands }}
     preKubeadmCommands:
       {{- toYaml . | nindent 6 }}
