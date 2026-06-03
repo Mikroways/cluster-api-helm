@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   cluster-api-cloudstack:
   - apiVersion: v2
+    created: "2026-06-03T16:33:56.163098152Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: 44ffa4d08959f437a37d8c2995687b03d35781b85ce308ec397fa5cd0c9bb455
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - cloudstack
+    maintainers:
+    - email: matias.gudin@mikroways.net
+      name: Matias Gudin
+    name: cluster-api-cloudstack
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-cloudstack-1.0.0/cluster-api-cloudstack-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
     created: "2024-11-27T14:34:32.511038991Z"
     description: Install Cluster API manifests to generate a fully working Kubernetes cluster
     digest: 9b535494ae188f45224d3aa0e0bb884a4ca55febae82ad875723e6678a72418a
