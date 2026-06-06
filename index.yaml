@@ -145,6 +145,28 @@ entries:
   cluster-api-proxmox:
   - apiVersion: v2
     appVersion: v1beta2
+    created: "2026-06-06T22:37:36.922881742Z"
+    description: Install CAPMOX manifests to generate a fully working Kubernetes cluster
+    digest: 16deb3cec622af124c11f386fb6338bbbe83539438426a699a5aa2072de41725
+    home: https://github.com/ionos-cloud/cluster-api-provider-proxmox
+    keywords:
+    - clusterapi
+    - capmox
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - proxmox
+    maintainers:
+    - email: christian.rodriguez@mikroways.net
+      name: Christian Rodriguez
+    name: cluster-api-proxmox
+    sources:
+    - https://github.com/ionos-cloud/cluster-api-provider-proxmox
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-proxmox-1.3.2/cluster-api-proxmox-1.3.2.tgz
+    version: 1.3.2
+  - apiVersion: v2
+    appVersion: v1beta2
     created: "2026-06-04T17:15:27.612296263Z"
     description: Install CAPMOX manifests to generate a fully working Kubernetes cluster
     digest: b3a36a6d76b78f407ede010a2d90e08cd2830eb3535cc1ac5b1f1772e346392f
