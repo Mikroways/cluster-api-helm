@@ -63,6 +63,26 @@ entries:
     version: 0.1.0
   cluster-api-openstack:
   - apiVersion: v2
+    created: "2026-06-24T20:08:25.03796194Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: a6bd07536247101df91581e06c9875683252a3e5ff7fef2e962ffe37b2fa42fa
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - openstack
+    maintainers:
+    - email: christian.rodriguez@mikroways.net
+      name: Christian Rodriguez
+    name: cluster-api-openstack
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-openstack-1.2.1/cluster-api-openstack-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v2
     created: "2022-02-16T14:13:56.716820005Z"
     description: Install Cluster API manifests to generate a fully working Kubernetes cluster
     digest: 3db19975069102d06b5fe6ae2ca4bf45f13bd7f7ced480a47c36474c6c9eb325
@@ -430,6 +450,27 @@ entries:
     - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-proxmox-1.0.0/cluster-api-proxmox-1.0.0.tgz
     version: 1.0.0
   cluster-api-vsphere:
+  - apiVersion: v2
+    appVersion: v1beta1
+    created: "2026-06-24T20:08:25.197211286Z"
+    description: Install Cluster API manifests to generate a fully working Kubernetes cluster
+    digest: 62942d8a709212882a8d8f2321965a15df93592525a494130c43dee511b8ec0b
+    home: https://cluster-api.sigs.k8s.io/
+    keywords:
+    - clusterapi
+    - provisioning
+    - bootstrapping
+    - kubernetes
+    - vsphere
+    maintainers:
+    - email: lucas.dicunzolo@mikroways.net
+      name: Lucas Di Cunzolo
+    name: cluster-api-vsphere
+    sources:
+    - https://cluster-api.sigs.k8s.io/
+    urls:
+    - https://github.com/Mikroways/cluster-api-helm/releases/download/cluster-api-vsphere-1.7.0/cluster-api-vsphere-1.7.0.tgz
+    version: 1.7.0
   - apiVersion: v2
     appVersion: v1beta1
     created: "2023-11-28T02:08:35.719135894Z"
