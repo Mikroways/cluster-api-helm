@@ -105,7 +105,7 @@ kubeadm:
     controllerManager:
       extraArgs:
         cloud-provider: external
-    imageRepository: k8s.gcr.io
+    imageRepository: registry.k8s.io
   initConfiguration:
     nodeRegistration:
       kubeletExtraArgs:

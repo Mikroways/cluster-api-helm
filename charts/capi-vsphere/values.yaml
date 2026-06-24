@@ -148,7 +148,6 @@ kubeadm:
   version: v1.20.9
   # must use one of the defined in controlPlaneTemplates
   templateName: ""
-  preKubeadmCommands: []
   users: []
   ntp: {}
   files: []
@@ -159,7 +158,7 @@ kubeadm:
     controllerManager:
       extraArgs:
         cloud-provider: external
-    imageRepository: k8s.gcr.io
+    imageRepository: registry.k8s.io
   useExperimentalRetryJoin: true
   preKubeadmCommands:
     - hostname "{{ ds.meta_data.hostname }}"
@@ -167,6 +166,7 @@ kubeadm:
     - echo "127.0.0.1   localhost" >>/etc/hosts
     - echo "127.0.0.1   {{ ds.meta_data.hostname }}" >>/etc/hosts
     - echo "{{ ds.meta_data.hostname }}" >/etc/hostname
+    - /etc/kube-vip-prepare.sh
   initConfiguration:
     nodeRegistration:
       criSocket: /var/run/containerd/containerd.sock
